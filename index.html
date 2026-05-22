@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moog Subharmonicon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="workspace">
+    <div class="instrument">
+        <div class="wood-panel left"></div>
+
+        <div class="faceplate">
+
+            <!-- Header -->
+            <div class="panel-header">
+                <div class="header-left">
+                    <span class="moog-logotype">MOOG</span>
+                </div>
+                <div class="header-center">
+                    <span class="model-name">SUBHARMONICON</span>
+                    <span class="model-sub">POLYRHYTHMIC SYNTHESIZER</span>
+                </div>
+                <div class="header-right">
+                    <div class="power-indicator">
+                        <div class="power-led"></div>
+                        <span class="power-label">PWR</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Controls Row -->
+            <div class="panel-controls">
+
+                <!-- VCO 1 -->
+                <div class="synth-section vco-panel" id="osc1">
+                    <div class="section-label-bar">
+                        <span class="section-id">VCO 1</span>
+                    </div>
+                    <div class="vco-body">
+                        <div class="knob-cluster">
+                            <div class="knob-unit large-unit">
+                                <div class="knob-scale-ring"></div>
+                                <div class="knob lg" data-param="osc1-freq" data-min="20" data-max="2000" data-value="440" data-log="1"></div>
+                                <span class="knob-label">FREQ</span>
+                            </div>
+                        </div>
+                        <div class="knob-cluster tight">
+                            <div class="knob-unit">
+                                <div class="knob-scale-ring sm"></div>
+                                <div class="knob sm" data-param="osc1-attack" data-min="0.001" data-max="1" data-value="0.01"></div>
+                                <span class="knob-label">ATTACK</span>
+                            </div>
+                            <div class="knob-unit">
+                                <div class="knob-scale-ring sm"></div>
+                                <div class="knob sm" data-param="osc1-decay" data-min="0.01" data-max="1" data-value="0.1"></div>
+                                <span class="knob-label">DECAY</span>
+                            </div>
+                        </div>
+                        <div class="vco-filter-cluster">
+                            <span class="vco-filter-tag">VCF</span>
+                            <div class="knob-unit">
+                                <div class="knob sm" data-param="osc1-vcf-cut" data-min="80" data-max="8000" data-value="4000" data-log="1"></div>
+                                <span class="knob-label">CUT</span>
+                            </div>
+                            <div class="knob-unit">
+                                <div class="knob sm" data-param="osc1-vcf-res" data-min="0.01" data-max="10" data-value="0.5"></div>
+                                <span class="knob-label">RES</span>
+                            </div>
+                        </div>
+                        <div class="switch-cluster">
+                            <div class="ctrl-row">
+                                <span class="ctrl-label">WAVE</span>
+                                <select class="hw-select waveform-select">
+                                    <option value="sine">SINE</option>
+                                    <option value="square">SQR</option>
+                                    <option value="sawtooth">SAW</option>
+                                    <option value="triangle">TRI</option>
+                                </select>
+                            </div>
+                            <div class="ctrl-row">
+                                <span class="ctrl-label">SEQ</span>
+                                <select class="hw-select sequencer-route">
+                                    <option value="seq1">1</option>
+                                    <option value="seq2">2</option>
+                                </select>
+                            </div>
+                            <button class="play-button osc-toggle">ON</button>
+                        </div>
+                    </div>
+                    <div class="sub-divider">
+                        <span class="sub-divider-label">SUBHARMONICS</span>
+                    </div>
+                    <div class="sub-row">
+                        <div class="suboscillator" id="subosc1">
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="sub1-div" data-min="1" data-max="16" data-value="2" data-integer="1"></div>
+                                <span class="knob-label div-label">÷2</span>
+                            </div>
+                            <select class="hw-select xs-select sequencer-route">
+                                <option value="seq1">S1</option>
+                                <option value="seq2">S2</option>
+                            </select>
+                            <button class="play-button sub-toggle">ON</button>
+                        </div>
+                        <div class="suboscillator" id="subosc2">
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="sub2-div" data-min="1" data-max="16" data-value="3" data-integer="1"></div>
+                                <span class="knob-label div-label">÷3</span>
+                            </div>
+                            <select class="hw-select xs-select sequencer-route">
+                                <option value="seq1">S1</option>
+                                <option value="seq2">S2</option>
+                            </select>
+                            <button class="play-button sub-toggle">ON</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-divider"></div>
+
+                <!-- VCO 2 -->
+                <div class="synth-section vco-panel" id="osc2">
+                    <div class="section-label-bar">
+                        <span class="section-id">VCO 2</span>
+                    </div>
+                    <div class="vco-body">
+                        <div class="knob-cluster">
+                            <div class="knob-unit large-unit">
+                                <div class="knob-scale-ring"></div>
+                                <div class="knob lg" data-param="osc2-freq" data-min="20" data-max="2000" data-value="220" data-log="1"></div>
+                                <span class="knob-label">FREQ</span>
+                            </div>
+                        </div>
+                        <div class="knob-cluster tight">
+                            <div class="knob-unit">
+                                <div class="knob-scale-ring sm"></div>
+                                <div class="knob sm" data-param="osc2-attack" data-min="0.001" data-max="1" data-value="0.01"></div>
+                                <span class="knob-label">ATTACK</span>
+                            </div>
+                            <div class="knob-unit">
+                                <div class="knob-scale-ring sm"></div>
+                                <div class="knob sm" data-param="osc2-decay" data-min="0.01" data-max="1" data-value="0.1"></div>
+                                <span class="knob-label">DECAY</span>
+                            </div>
+                        </div>
+                        <div class="vco-filter-cluster">
+                            <span class="vco-filter-tag">VCF</span>
+                            <div class="knob-unit">
+                                <div class="knob sm" data-param="osc2-vcf-cut" data-min="80" data-max="8000" data-value="4000" data-log="1"></div>
+                                <span class="knob-label">CUT</span>
+                            </div>
+                            <div class="knob-unit">
+                                <div class="knob sm" data-param="osc2-vcf-res" data-min="0.01" data-max="10" data-value="0.5"></div>
+                                <span class="knob-label">RES</span>
+                            </div>
+                        </div>
+                        <div class="switch-cluster">
+                            <div class="ctrl-row">
+                                <span class="ctrl-label">WAVE</span>
+                                <select class="hw-select waveform-select">
+                                    <option value="sine">SINE</option>
+                                    <option value="square">SQR</option>
+                                    <option value="sawtooth">SAW</option>
+                                    <option value="triangle">TRI</option>
+                                </select>
+                            </div>
+                            <div class="ctrl-row">
+                                <span class="ctrl-label">SEQ</span>
+                                <select class="hw-select sequencer-route">
+                                    <option value="seq1">1</option>
+                                    <option value="seq2">2</option>
+                                </select>
+                            </div>
+                            <button class="play-button osc-toggle">ON</button>
+                        </div>
+                    </div>
+                    <div class="sub-divider">
+                        <span class="sub-divider-label">SUBHARMONICS</span>
+                    </div>
+                    <div class="sub-row">
+                        <div class="suboscillator" id="subosc3">
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="sub3-div" data-min="1" data-max="16" data-value="2" data-integer="1"></div>
+                                <span class="knob-label div-label">÷2</span>
+                            </div>
+                            <select class="hw-select xs-select sequencer-route">
+                                <option value="seq1">S1</option>
+                                <option value="seq2">S2</option>
+                            </select>
+                            <button class="play-button sub-toggle">ON</button>
+                        </div>
+                        <div class="suboscillator" id="subosc4">
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="sub4-div" data-min="1" data-max="16" data-value="3" data-integer="1"></div>
+                                <span class="knob-label div-label">÷3</span>
+                            </div>
+                            <select class="hw-select xs-select sequencer-route">
+                                <option value="seq1">S1</option>
+                                <option value="seq2">S2</option>
+                            </select>
+                            <button class="play-button sub-toggle">ON</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-divider"></div>
+
+                <!-- VCF -->
+                <div class="synth-section vcf-panel">
+                    <div class="section-label-bar"><span class="section-id">VCF</span></div>
+                    <div class="section-body-v">
+                        <div class="knob-unit">
+                            <div class="knob-scale-ring"></div>
+                            <div class="knob" data-param="cutoff" data-min="20" data-max="2000" data-value="1000" data-log="1"></div>
+                            <span class="knob-label">CUTOFF</span>
+                        </div>
+                        <div class="knob-unit">
+                            <div class="knob-scale-ring"></div>
+                            <div class="knob" data-param="resonance" data-min="0.01" data-max="10" data-value="1"></div>
+                            <span class="knob-label">RESO</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-divider"></div>
+
+                <!-- LFO -->
+                <div class="synth-section lfo-panel">
+                    <div class="section-label-bar"><span class="section-id">LFO</span></div>
+                    <div class="section-body-v">
+                        <div class="knob-unit">
+                            <div class="knob-scale-ring"></div>
+                            <div class="knob" data-param="lfo-rate" data-min="0.1" data-max="10" data-value="1"></div>
+                            <span class="knob-label">RATE</span>
+                        </div>
+                        <div class="knob-unit">
+                            <div class="knob-scale-ring"></div>
+                            <div class="knob" data-param="lfo-amount" data-min="0" data-max="100" data-value="0"></div>
+                            <span class="knob-label">AMT</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-divider"></div>
+
+                <!-- MASTER CLOCK -->
+                <div class="synth-section clock-panel">
+                    <div class="section-label-bar"><span class="section-id">MASTER CLOCK</span></div>
+                    <div class="section-body-v">
+                        <div class="knob-unit">
+                            <div class="knob-scale-ring lg-ring"></div>
+                            <div class="knob lg" data-param="tempo" data-min="30" data-max="240" data-value="120"></div>
+                            <span class="knob-label">TEMPO</span>
+                        </div>
+                        <div class="bpm-readout">
+                            <div class="bpm-screen">
+                                <span id="bpm-value">120</span>
+                            </div>
+                            <span class="bpm-unit">BPM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-divider"></div>
+
+                <!-- FX -->
+                <div class="synth-section fx-panel">
+                    <div class="section-label-bar"><span class="section-id">FX</span></div>
+                    <div class="fx-chain">
+
+                        <div class="fx-group">
+                            <span class="fx-group-label">DRIVE</span>
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="drive" data-min="0" data-max="1" data-value="0"></div>
+                                <span class="knob-label">AMT</span>
+                            </div>
+                        </div>
+
+                        <div class="fx-sep"></div>
+
+                        <div class="fx-group">
+                            <span class="fx-group-label">CHORUS</span>
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="chorus-rate" data-min="0.1" data-max="5" data-value="1"></div>
+                                <span class="knob-label">RATE</span>
+                            </div>
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="chorus-depth" data-min="0" data-max="20" data-value="0"></div>
+                                <span class="knob-label">DEPTH</span>
+                            </div>
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="chorus-mix" data-min="0" data-max="1" data-value="0"></div>
+                                <span class="knob-label">MIX</span>
+                            </div>
+                        </div>
+
+                        <div class="fx-sep"></div>
+
+                        <div class="fx-group">
+                            <span class="fx-group-label">DELAY</span>
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="delay-time" data-min="0.05" data-max="1" data-value="0.25"></div>
+                                <span class="knob-label">TIME</span>
+                            </div>
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="delay-feedback" data-min="0" data-max="0.9" data-value="0"></div>
+                                <span class="knob-label">FDBK</span>
+                            </div>
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="delay-mix" data-min="0" data-max="1" data-value="0"></div>
+                                <span class="knob-label">MIX</span>
+                            </div>
+                        </div>
+
+                        <div class="fx-sep"></div>
+
+                        <div class="fx-group">
+                            <span class="fx-group-label">REVERB</span>
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="reverb-size" data-min="0" data-max="1" data-value="0.3"></div>
+                                <span class="knob-label">SIZE</span>
+                            </div>
+                            <div class="knob-unit xs-unit">
+                                <div class="knob xs" data-param="reverb-mix" data-min="0" data-max="1" data-value="0"></div>
+                                <span class="knob-label">MIX</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div><!-- panel-controls -->
+
+            <!-- Oscilloscope -->
+            <div class="scope-zone">
+                <div class="scope-bezel">
+                    <canvas id="oscilloscope" width="800" height="90"></canvas>
+                    <div class="scope-legend">
+                        <span class="scope-legend-item vco1">VCO 1</span>
+                        <span class="scope-legend-item vco2">VCO 2</span>
+                        <span class="scope-legend-item mix">MIX</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Patch Bar -->
+            <div class="patch-bar">
+                <span class="patch-bar-label">PATCH</span>
+                <select id="patch-select" class="hw-select patch-select"></select>
+                <button id="patch-load-btn" class="transport-btn patch-btn">LOAD</button>
+                <div class="patch-name-wrap">
+                    <input id="patch-name-input" class="patch-name-input" type="text" placeholder="patch name" maxlength="32" spellcheck="false">
+                </div>
+                <button id="patch-save-btn" class="transport-btn patch-btn patch-btn-save">SAVE</button>
+                <button id="patch-delete-btn" class="transport-btn patch-btn patch-btn-del">DEL</button>
+            </div>
+
+            <!-- Sequencers -->
+            <div class="sequencers-zone">
+                <div class="sequencer-section" id="seq1">
+                    <span class="seq-name">SEQ 1</span>
+                    <div class="seq-rate-control">
+                        <div class="knob-unit xs-unit">
+                            <div class="knob xs" data-param="seq1-rate" data-min="1" data-max="8" data-value="1" data-integer="1"></div>
+                            <span class="knob-label seq-rate-label">÷1</span>
+                        </div>
+                        <span class="ctrl-label seq-rate-lbl">RATE</span>
+                    </div>
+                    <div class="steps"></div>
+                    <div class="seq-transport">
+                        <button class="start-sequencer-button transport-btn run-btn">RUN</button>
+                        <button class="stop-sequencer-button transport-btn stop-btn">STOP</button>
+                    </div>
+                </div>
+                <div class="sequencer-section" id="seq2">
+                    <span class="seq-name">SEQ 2</span>
+                    <div class="seq-rate-control">
+                        <div class="knob-unit xs-unit">
+                            <div class="knob xs" data-param="seq2-rate" data-min="1" data-max="8" data-value="1" data-integer="1"></div>
+                            <span class="knob-label seq-rate-label">÷1</span>
+                        </div>
+                        <span class="ctrl-label seq-rate-lbl">RATE</span>
+                    </div>
+                    <div class="steps"></div>
+                    <div class="seq-transport">
+                        <button class="start-sequencer-button transport-btn run-btn">RUN</button>
+                        <button class="stop-sequencer-button transport-btn stop-btn">STOP</button>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- faceplate -->
+        <div class="wood-panel right"></div>
+    </div><!-- instrument -->
+</div><!-- workspace -->
+<script type="module" src="main.js"></script>
+</body>
+</html>
