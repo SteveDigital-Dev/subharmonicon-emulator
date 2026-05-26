@@ -76,7 +76,7 @@
     <!-- SUB1 COLUMN -->
     <control type="labelh" name="SUB1" x="10" y="8" w="220" h="28" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
     <control type="labelh" name="DIV" x="10" y="42" w="80" h="20" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderv" name="SUB1 DIV" x="10" y="62" w="100" h="350" color="red" osc_cs="/sub1/div" scalef="1.0" scalet="16.0" response="absolute" inverted="false" centered="false"/>
+    <control type="faderv" name="SUB1 DIV" x="10" y="62" w="100" h="270" color="red" osc_cs="/sub1/div" scalef="1.0" scalet="16.0" response="absolute" inverted="false" centered="false"/>
     <control type="labelh" name="ROUTE" x="120" y="42" w="100" h="20" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
     <control type="toggle" name="SUB1 ROUTE" x="120" y="62" w="100" h="60" color="red" osc_cs="/sub1/route" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
     <control type="labelh" name="S1|S2" x="120" y="128" w="100" h="20" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
@@ -84,7 +84,7 @@
     <!-- SUB2 COLUMN -->
     <control type="labelh" name="SUB2" x="256" y="8" w="220" h="28" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
     <control type="labelh" name="DIV" x="256" y="42" w="80" h="20" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderv" name="SUB2 DIV" x="256" y="62" w="100" h="350" color="red" osc_cs="/sub2/div" scalef="1.0" scalet="16.0" response="absolute" inverted="false" centered="false"/>
+    <control type="faderv" name="SUB2 DIV" x="256" y="62" w="100" h="270" color="red" osc_cs="/sub2/div" scalef="1.0" scalet="16.0" response="absolute" inverted="false" centered="false"/>
     <control type="labelh" name="ROUTE" x="366" y="42" w="100" h="20" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
     <control type="toggle" name="SUB2 ROUTE" x="366" y="62" w="100" h="60" color="red" osc_cs="/sub2/route" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
     <control type="labelh" name="S1|S2" x="366" y="128" w="100" h="20" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
@@ -92,7 +92,7 @@
     <!-- SUB3 COLUMN -->
     <control type="labelh" name="SUB3" x="502" y="8" w="220" h="28" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
     <control type="labelh" name="DIV" x="502" y="42" w="80" h="20" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderv" name="SUB3 DIV" x="502" y="62" w="100" h="350" color="red" osc_cs="/sub3/div" scalef="1.0" scalet="16.0" response="absolute" inverted="false" centered="false"/>
+    <control type="faderv" name="SUB3 DIV" x="502" y="62" w="100" h="270" color="red" osc_cs="/sub3/div" scalef="1.0" scalet="16.0" response="absolute" inverted="false" centered="false"/>
     <control type="labelh" name="ROUTE" x="612" y="42" w="100" h="20" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
     <control type="toggle" name="SUB3 ROUTE" x="612" y="62" w="100" h="60" color="red" osc_cs="/sub3/route" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
     <control type="labelh" name="S1|S2" x="612" y="128" w="100" h="20" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
@@ -100,14 +100,29 @@
     <!-- SUB4 COLUMN -->
     <control type="labelh" name="SUB4" x="748" y="8" w="220" h="28" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
     <control type="labelh" name="DIV" x="748" y="42" w="80" h="20" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderv" name="SUB4 DIV" x="748" y="62" w="100" h="350" color="red" osc_cs="/sub4/div" scalef="1.0" scalet="16.0" response="absolute" inverted="false" centered="false"/>
+    <control type="faderv" name="SUB4 DIV" x="748" y="62" w="100" h="270" color="red" osc_cs="/sub4/div" scalef="1.0" scalet="16.0" response="absolute" inverted="false" centered="false"/>
     <control type="labelh" name="ROUTE" x="858" y="42" w="100" h="20" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
     <control type="toggle" name="SUB4 ROUTE" x="858" y="62" w="100" h="60" color="red" osc_cs="/sub4/route" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
     <control type="labelh" name="S1|S2" x="858" y="128" w="100" h="20" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
 
+    <!-- SEQUENCER RHYTHM CONTROLS ROW: labels at y=360, faders at y=380 -->
+    <control type="labelh" name="S1 LEN"    x="0"   y="360" w="160" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh" name="S1 SWING"  x="170" y="360" w="160" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh" name="S1 EUCLID" x="340" y="360" w="160" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh" name="S2 LEN"    x="520" y="360" w="160" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh" name="S2 SWING"  x="690" y="360" w="160" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh" name="S2 EUCLID" x="860" y="360" w="160" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+
+    <control type="faderh" name="SEQ1 LEN"    osc_cs="/seq1/length"  scalef="1.0"   scalet="16.0"  x="0"   y="380" w="160" h="40" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh" name="SEQ1 SWING"  osc_cs="/seq1/swing"   scalef="0.0"   scalet="100.0" x="170" y="380" w="160" h="40" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh" name="SEQ1 EUCLID" osc_cs="/seq1/euclid"  scalef="0.0"   scalet="16.0"  x="340" y="380" w="160" h="40" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh" name="SEQ2 LEN"    osc_cs="/seq2/length"  scalef="1.0"   scalet="16.0"  x="520" y="380" w="160" h="40" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh" name="SEQ2 SWING"  osc_cs="/seq2/swing"   scalef="0.0"   scalet="100.0" x="690" y="380" w="160" h="40" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh" name="SEQ2 EUCLID" osc_cs="/seq2/euclid"  scalef="0.0"   scalet="16.0"  x="860" y="380" w="160" h="40" color="red" response="absolute" inverted="false" centered="false"/>
+
     <!-- BOTTOM ROW: TEMPO, SEQ1 RATE, SEQ2 RATE -->
-    <control type="labelh" name="TEMPO" x="10" y="430" w="120" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderh" name="TEMPO" x="10" y="452" w="320" h="44" color="red" osc_cs="/tempo" scalef="30.0" scalet="240.0" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh" name="TEMPO"     x="10"  y="430" w="120" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh" name="TEMPO"     x="10"  y="452" w="320" h="44" color="red" osc_cs="/tempo" scalef="30.0" scalet="240.0" response="absolute" inverted="false" centered="false"/>
 
     <control type="labelh" name="SEQ1 RATE" x="344" y="430" w="160" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
     <control type="faderh" name="SEQ1 RATE" x="344" y="452" w="320" h="44" color="red" osc_cs="/seq1/rate" scalef="1.0" scalet="8.0" response="absolute" inverted="false" centered="false"/>
@@ -117,103 +132,89 @@
 
   </tabpage>
 
-  <tabpage name="VCF+LFO" scalef="0.0" scalet="1.0" li_t="0" li_c="0" li_s="14" li_o="1.0" li_b="0" la_t="0" la_c="0" la_s="14" la_o="1.0" la_b="0" la_x="0" la_y="0" la_w="0" la_h="0" bgcolor="0">
+  <tabpage name="VOICES+LFO" scalef="0.0" scalet="1.0" li_t="0" li_c="0" li_s="14" li_o="1.0" li_b="0" la_t="0" la_c="0" la_s="14" la_o="1.0" la_b="0" la_x="0" la_y="0" la_w="0" la_h="0" bgcolor="0">
 
-    <!-- VCF SECTION -->
-    <control type="labelh" name="VCF" x="10" y="8" w="490" h="30" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
+    <!-- VOICE 1 VCF + VCA (x=0, w=320) -->
+    <control type="labelh" name="VOICE 1"      x="0"   y="10"  w="320" h="30" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V1 CUTOFF"   osc_cs="/v1/cutoff" scalef="20.0"  scalet="8000.0" x="0"   y="50"  w="150" h="150" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V1 RESO"     osc_cs="/v1/res"    scalef="0.0"   scalet="10.0"   x="160" y="50"  w="150" h="150" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh"  name="V1 LEVEL"    osc_cs="/v1/level"  scalef="0.0"   scalet="1.0"    x="0"   y="210" w="310" h="50"  color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="CUT 20-8000Hz" x="0" y="270" w="150" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="RES 0-10"    x="160" y="270" w="150" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh"  name="V1 CUT fine" osc_cs="/v1/cutoff" scalef="20.0"  scalet="8000.0" x="0"   y="300" w="310" h="40" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh"  name="V1 RES fine" osc_cs="/v1/res"    scalef="0.0"   scalet="10.0"   x="0"   y="350" w="310" h="40" color="red" response="absolute" inverted="false" centered="false"/>
 
-    <control type="labelh" name="CUTOFF" x="60" y="50" w="160" h="24" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="rotaryh" name="VCF CUTOFF" x="60" y="74" w="180" h="180" color="red" osc_cs="/vcf/cutoff" scalef="20.0" scalet="2000.0" response="absolute" inverted="false" centered="false"/>
+    <!-- VOICE 2 VCF + VCA (x=344, w=320) -->
+    <control type="labelh"  name="VOICE 2"     x="344" y="10"  w="320" h="30" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V2 CUTOFF"   osc_cs="/v2/cutoff" scalef="20.0"  scalet="8000.0" x="344" y="50"  w="150" h="150" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V2 RESO"     osc_cs="/v2/res"    scalef="0.0"   scalet="10.0"   x="504" y="50"  w="150" h="150" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh"  name="V2 LEVEL"    osc_cs="/v2/level"  scalef="0.0"   scalet="1.0"    x="344" y="210" w="310" h="50"  color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="CUT 20-8000Hz" x="344" y="270" w="150" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="RES 0-10"    x="504" y="270" w="150" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh"  name="V2 CUT fine" osc_cs="/v2/cutoff" scalef="20.0"  scalet="8000.0" x="344" y="300" w="310" h="40" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh"  name="V2 RES fine" osc_cs="/v2/res"    scalef="0.0"   scalet="10.0"   x="344" y="350" w="310" h="40" color="red" response="absolute" inverted="false" centered="false"/>
 
-    <control type="labelh" name="RESONANCE" x="280" y="50" w="160" h="24" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="rotaryh" name="VCF RES" x="280" y="74" w="180" h="180" color="red" osc_cs="/vcf/res" scalef="0.0" scalet="10.0" response="absolute" inverted="false" centered="false"/>
-
-    <!-- LFO SECTION -->
-    <control type="labelh" name="LFO" x="522" y="8" w="490" h="30" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-
-    <control type="labelh" name="RATE" x="572" y="50" w="160" h="24" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="rotaryh" name="LFO RATE" x="572" y="74" w="180" h="180" color="red" osc_cs="/lfo/rate" scalef="0.0" scalet="10.0" response="absolute" inverted="false" centered="false"/>
-
-    <control type="labelh" name="AMOUNT" x="792" y="50" w="160" h="24" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="rotaryh" name="LFO AMT" x="792" y="74" w="180" h="180" color="red" osc_cs="/lfo/amount" scalef="0.0" scalet="200.0" response="absolute" inverted="false" centered="false"/>
-
-    <!-- Value hint labels -->
-    <control type="labelh" name="20-2000 Hz" x="60" y="260" w="180" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="labelh" name="0-10" x="280" y="260" w="180" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="labelh" name="0-10 Hz" x="572" y="260" w="180" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="labelh" name="0-200" x="792" y="260" w="180" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-
-    <!-- Large range faders for precise VCF control -->
-    <control type="labelh" name="VCF CUTOFF FINE" x="10" y="320" w="200" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderh" name="VCF CUTOFF FINE" x="10" y="342" w="490" h="44" color="red" osc_cs="/vcf/cutoff" scalef="20.0" scalet="2000.0" response="absolute" inverted="false" centered="false"/>
-
-    <control type="labelh" name="LFO RATE FINE" x="522" y="320" w="200" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderh" name="LFO RATE FINE" x="522" y="342" w="490" h="44" color="red" osc_cs="/lfo/rate" scalef="0.0" scalet="10.0" response="absolute" inverted="false" centered="false"/>
-
-    <control type="labelh" name="VCF RES FINE" x="10" y="402" w="200" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderh" name="VCF RES FINE" x="10" y="424" w="490" h="44" color="red" osc_cs="/vcf/res" scalef="0.0" scalet="10.0" response="absolute" inverted="false" centered="false"/>
-
-    <control type="labelh" name="LFO AMT FINE" x="522" y="402" w="200" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderh" name="LFO AMT FINE" x="522" y="424" w="490" h="44" color="red" osc_cs="/lfo/amount" scalef="0.0" scalet="200.0" response="absolute" inverted="false" centered="false"/>
+    <!-- LFO SECTION (x=688, right third) -->
+    <control type="labelh" name="LFO"       x="688" y="8"   w="336" h="30"  color="red"  osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
+    <control type="labelh" name="RATE"      x="688" y="50"  w="160" h="24"  color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
+    <control type="rotaryh" name="LFO RATE" x="688" y="74"  w="150" h="150" color="red"  osc_cs="/lfo/rate"   scalef="0.0" scalet="10.0"   response="absolute" inverted="false" centered="false"/>
+    <control type="labelh" name="AMOUNT"    x="858" y="50"  w="160" h="24"  color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
+    <control type="rotaryh" name="LFO AMT"  x="858" y="74"  w="150" h="150" color="red"  osc_cs="/lfo/amount" scalef="0.0" scalet="200.0"  response="absolute" inverted="false" centered="false"/>
+    <control type="labelh" name="0-10 Hz"   x="688" y="230" w="160" h="22"  color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
+    <control type="labelh" name="0-200"     x="858" y="230" w="160" h="22"  color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
+    <control type="labelh" name="LFO RATE FINE" x="688" y="270" w="160" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh" name="LFO RATE FINE" x="688" y="292" w="330" h="40" color="red" osc_cs="/lfo/rate"   scalef="0.0" scalet="10.0"  response="absolute" inverted="false" centered="false"/>
+    <control type="labelh" name="LFO AMT FINE"  x="688" y="338" w="160" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh" name="LFO AMT FINE"  x="688" y="360" w="330" h="40" color="red" osc_cs="/lfo/amount" scalef="0.0" scalet="200.0" response="absolute" inverted="false" centered="false"/>
 
   </tabpage>
 
   <tabpage name="FX" scalef="0.0" scalet="1.0" li_t="0" li_c="0" li_s="14" li_o="1.0" li_b="0" la_t="0" la_c="0" la_s="14" la_o="1.0" la_b="0" la_x="0" la_y="0" la_w="0" la_h="0" bgcolor="0">
 
-    <!-- DRIVE -->
-    <control type="labelh" name="DRIVE" x="10" y="8" w="140" h="24" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="faderh" name="FX DRIVE" x="10" y="34" w="140" h="44" color="red" osc_cs="/fx/drive" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <!-- VOICE 1 FX (X=0) -->
+    <control type="labelh"  name="VOICE 1 FX"       x="0"   y="10"  w="330" h="25" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh"  name="V1FX DRIVE"        osc_cs="/v1fx/drive"     scalef="0.0" scalet="1.0"    x="0"   y="40"  w="330" h="35" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="CHORUS"             x="0"   y="80"  w="330" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V1FX CHO RATE"      osc_cs="/v1fx/cho_rate"  scalef="0.0" scalet="5.0"    x="0"   y="100" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V1FX CHO DEPTH"     osc_cs="/v1fx/cho_depth" scalef="0.0" scalet="20.0"   x="110" y="100" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V1FX CHO MIX"       osc_cs="/v1fx/cho_mix"   scalef="0.0" scalet="1.0"    x="220" y="100" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="DELAY"              x="0"   y="205" w="330" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V1FX DLY TIME"      osc_cs="/v1fx/dly_time"  scalef="0.0" scalet="1.0"    x="0"   y="225" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V1FX DLY FDBK"      osc_cs="/v1fx/dly_fdbk"  scalef="0.0" scalet="0.95"   x="110" y="225" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V1FX DLY MIX"       osc_cs="/v1fx/dly_mix"   scalef="0.0" scalet="1.0"    x="220" y="225" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="REVERB"             x="0"   y="330" w="330" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V1FX RVB SIZE"      osc_cs="/v1fx/rvb_size"  scalef="0.0" scalet="1.0"    x="0"   y="350" w="155" h="155" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V1FX RVB MIX"       osc_cs="/v1fx/rvb_mix"   scalef="0.0" scalet="1.0"    x="165" y="350" w="155" h="155" color="red" response="absolute" inverted="false" centered="false"/>
 
-    <!-- CHORUS SECTION -->
-    <control type="labelh" name="CHORUS" x="10" y="100" w="300" h="28" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
+    <!-- VOICE 2 FX (X=342) -->
+    <control type="labelh"  name="VOICE 2 FX"         x="342" y="10"  w="330" h="25" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh"  name="V2FX DRIVE"          osc_cs="/v2fx/drive"     scalef="0.0" scalet="1.0"    x="342" y="40"  w="330" h="35" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="CHORUS"               x="342" y="80"  w="330" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V2FX CHO RATE"        osc_cs="/v2fx/cho_rate"  scalef="0.0" scalet="5.0"    x="342" y="100" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V2FX CHO DEPTH"       osc_cs="/v2fx/cho_depth" scalef="0.0" scalet="20.0"   x="452" y="100" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V2FX CHO MIX"         osc_cs="/v2fx/cho_mix"   scalef="0.0" scalet="1.0"    x="562" y="100" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="DELAY"                x="342" y="205" w="330" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V2FX DLY TIME"        osc_cs="/v2fx/dly_time"  scalef="0.0" scalet="1.0"    x="342" y="225" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V2FX DLY FDBK"        osc_cs="/v2fx/dly_fdbk"  scalef="0.0" scalet="0.95"   x="452" y="225" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V2FX DLY MIX"         osc_cs="/v2fx/dly_mix"   scalef="0.0" scalet="1.0"    x="562" y="225" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="REVERB"               x="342" y="330" w="330" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V2FX RVB SIZE"        osc_cs="/v2fx/rvb_size"  scalef="0.0" scalet="1.0"    x="342" y="350" w="155" h="155" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="V2FX RVB MIX"         osc_cs="/v2fx/rvb_mix"   scalef="0.0" scalet="1.0"    x="507" y="350" w="155" h="155" color="red" response="absolute" inverted="false" centered="false"/>
 
-    <control type="labelh" name="RATE" x="10" y="134" w="90" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="rotaryh" name="CHO RATE" x="10" y="156" w="100" h="100" color="red" osc_cs="/fx/cho_rate" scalef="0.0" scalet="5.0" response="absolute" inverted="false" centered="false"/>
-
-    <control type="labelh" name="DEPTH" x="116" y="134" w="90" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="rotaryh" name="CHO DEPTH" x="116" y="156" w="100" h="100" color="red" osc_cs="/fx/cho_depth" scalef="0.0" scalet="20.0" response="absolute" inverted="false" centered="false"/>
-
-    <control type="labelh" name="MIX" x="222" y="134" w="90" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="rotaryh" name="CHO MIX" x="222" y="156" w="100" h="100" color="red" osc_cs="/fx/cho_mix" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-
-    <!-- CHORUS FADERS (fine control) -->
-    <control type="faderh" name="CHO RATE F" x="10" y="264" w="312" h="34" color="red" osc_cs="/fx/cho_rate" scalef="0.0" scalet="5.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderh" name="CHO DEPTH F" x="10" y="302" w="312" h="34" color="red" osc_cs="/fx/cho_depth" scalef="0.0" scalet="20.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderh" name="CHO MIX F" x="10" y="340" w="312" h="34" color="red" osc_cs="/fx/cho_mix" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-
-    <!-- DELAY SECTION -->
-    <control type="labelh" name="DELAY" x="356" y="100" w="300" h="28" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-
-    <control type="labelh" name="TIME" x="356" y="134" w="90" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="rotaryh" name="DLY TIME" x="356" y="156" w="100" h="100" color="red" osc_cs="/fx/dly_time" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-
-    <control type="labelh" name="FDBK" x="462" y="134" w="90" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="rotaryh" name="DLY FDBK" x="462" y="156" w="100" h="100" color="red" osc_cs="/fx/dly_fdbk" scalef="0.0" scalet="0.95" response="absolute" inverted="false" centered="false"/>
-
-    <control type="labelh" name="MIX" x="568" y="134" w="90" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="rotaryh" name="DLY MIX" x="568" y="156" w="100" h="100" color="red" osc_cs="/fx/dly_mix" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-
-    <!-- DELAY FADERS (fine control) -->
-    <control type="faderh" name="DLY TIME F" x="356" y="264" w="312" h="34" color="red" osc_cs="/fx/dly_time" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderh" name="DLY FDBK F" x="356" y="302" w="312" h="34" color="red" osc_cs="/fx/dly_fdbk" scalef="0.0" scalet="0.95" response="absolute" inverted="false" centered="false"/>
-    <control type="faderh" name="DLY MIX F" x="356" y="340" w="312" h="34" color="red" osc_cs="/fx/dly_mix" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-
-    <!-- REVERB SECTION -->
-    <control type="labelh" name="REVERB" x="702" y="100" w="312" h="28" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-
-    <control type="labelh" name="SIZE" x="702" y="134" w="140" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="rotaryh" name="RVB SIZE" x="702" y="156" w="150" h="150" color="red" osc_cs="/fx/rvb_size" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-
-    <control type="labelh" name="MIX" x="862" y="134" w="140" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="true"/>
-    <control type="rotaryh" name="RVB MIX" x="862" y="156" w="150" h="150" color="red" osc_cs="/fx/rvb_mix" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-
-    <!-- REVERB FADERS (fine control) -->
-    <control type="faderh" name="RVB SIZE F" x="702" y="316" w="312" h="34" color="red" osc_cs="/fx/rvb_size" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderh" name="RVB MIX F" x="702" y="354" w="312" h="34" color="red" osc_cs="/fx/rvb_mix" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-
-    <!-- DRIVE FINE FADER (full width hint) -->
-    <control type="labelh" name="DRIVE" x="10" y="406" w="120" h="22" color="gray" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
-    <control type="faderh" name="FX DRIVE FINE" x="10" y="428" w="1002" h="44" color="red" osc_cs="/fx/drive" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <!-- MASTER FX (X=684) -->
+    <control type="labelh"  name="MASTER FX"           x="684" y="10"  w="330" h="25" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="faderh"  name="MFX DRIVE"            osc_cs="/mfx/drive"      scalef="0.0" scalet="1.0"    x="684" y="40"  w="330" h="35" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="CHORUS"               x="684" y="80"  w="330" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="MFX CHO RATE"         osc_cs="/mfx/cho_rate"   scalef="0.0" scalet="5.0"    x="684" y="100" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="MFX CHO DEPTH"        osc_cs="/mfx/cho_depth"  scalef="0.0" scalet="20.0"   x="794" y="100" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="MFX CHO MIX"          osc_cs="/mfx/cho_mix"    scalef="0.0" scalet="1.0"    x="904" y="100" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="DELAY"                x="684" y="205" w="330" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="MFX DLY TIME"         osc_cs="/mfx/dly_time"   scalef="0.0" scalet="1.0"    x="684" y="225" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="MFX DLY FDBK"         osc_cs="/mfx/dly_fdbk"   scalef="0.0" scalet="0.95"   x="794" y="225" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="MFX DLY MIX"          osc_cs="/mfx/dly_mix"    scalef="0.0" scalet="1.0"    x="904" y="225" w="100" h="100" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="labelh"  name="REVERB"               x="684" y="330" w="330" h="20" color="red" osc_cs="" scalef="0.0" scalet="1.0" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="MFX RVB SIZE"         osc_cs="/mfx/rvb_size"   scalef="0.0" scalet="1.0"    x="684" y="350" w="155" h="155" color="red" response="absolute" inverted="false" centered="false"/>
+    <control type="rotaryh" name="MFX RVB MIX"          osc_cs="/mfx/rvb_mix"    scalef="0.0" scalet="1.0"    x="849" y="350" w="155" h="155" color="red" response="absolute" inverted="false" centered="false"/>
 
   </tabpage>
 
