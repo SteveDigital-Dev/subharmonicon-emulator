@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
-"""Generate subharmonicon.pd — the main patch that wires all abstractions."""
+"""Generate subharmonicon.pd — the main patch that wires all abstractions.
+
+New architecture (per-voice signal chain):
+  seq1 → gate+pitch → VCO1 ──┐
+                      sub1 ──┤── sum1 → voice1_vcf~ → [*~] VCA1 → fx~(v1) ──┐
+                      sub2 ──┘                                                  ├── sum_master → fx~(master) → dac~
+  seq2 → gate+pitch → VCO2 ──┐                                                 │
+                      sub3 ──┤── sum2 → voice2_vcf~ → [*~] VCA2 → fx~(v2) ──┘
+                      sub4 ──┘
+"""
 
 import sys
 
@@ -25,36 +34,41 @@ def wire(src, outlet, dst, inlet):
 # ── Layout constants ──────────────────────────────────────────────────────────
 #
 #  x columns:
-#   10  – VCO1 freq/wave/env
-#  210  – VCO2 freq/wave/env
-#  410  – Suboscs (4 side by side, 50px each)
-#  640  – Global VCF + LFO
-#  800  – Master clock + FX
-# 1000  – signal chain / dac
+#   10   – VCO1 freq/wave/env
+#  210   – VCO2 freq/wave/env
+#  410   – Suboscs (4 side by side, 50px each)
+#  640   – Voice 1 VCF + Voice 1 VCA
+#  740   – Voice 2 VCF + Voice 2 VCA
+#  840   – LFO
+#  960   – Voice 1 FX
+# 1060   – Voice 2 FX
+# 1160   – Master FX
 #
 #  y rows:
-#   10  – section labels
-#   30  – primary controls (freq, cutoff knobs → nbx)
-#   60  – secondary controls
-#   90  – waveform / routing toggles
-#  130  – seq rate divisors
-#  160  – seq abstraction
-#  440  – signal chain begins
+#   10   – section labels
+#   30   – primary controls (freq, cutoff knobs → nbx)
+#   60   – secondary controls
+#   90   – waveform / routing toggles
+#  130   – seq rate divisors / extra seq controls
+#  160   – seq abstraction
+#  240   – more seq controls (length, swing, euclid)
+#  440   – signal chain begins
 
 # ── Section labels ────────────────────────────────────────────────────────────
 text(10,  10, '--- VCO 1 ---')
 text(210, 10, '--- VCO 2 ---')
 text(410, 10, '--- SUBOSCS ---')
-text(640, 10, '--- VCF + LFO ---')
-text(800, 10, '--- CLOCK + FX ---')
+text(640, 10, '--- V1 VCF ---')
+text(740, 10, '--- V2 VCF ---')
+text(840, 10, '--- LFO ---')
 text(10, 390, '--- SEQUENCERS ---')
 
 # ── Master clock ──────────────────────────────────────────────────────────────
-text(800, 25, 'TEMPO BPM')
-tempo_nbx = nbx(800, 40, 30, 240, 'tempo')       # tempo BPM number box
-bpm2ms    = obj(800, 65, 'expr 60000 / $f1')     # convert BPM → period ms
-clock_tgl = obj(800, 90, 'tgl 20 0 empty empty CLOCK 20 8 0 10 -4 -4 -262144 0 0')
-metro     = obj(800, 115, 'metro 500')
+text(840, 130, 'TEMPO BPM')
+tempo_nbx = nbx(840, 145, 30, 240, 'tempo')      # tempo BPM number box
+bpm2ms    = obj(840, 170, 'expr 60000 / $f1')    # convert BPM → period ms
+clock_tgl = obj(840, 195, 'tgl 20 0 empty empty CLOCK 20 8 0 10 -4 -4 -262144 0 0')
+metro     = obj(840, 220, 'metro 500')
 wire(tempo_nbx, 0, bpm2ms, 0)
 wire(bpm2ms,    0, metro,  1)   # set period
 wire(clock_tgl, 0, metro,  0)   # start/stop
@@ -94,7 +108,7 @@ v2_route  = obj(210, 155, 'tgl 20 0 empty empty R2 20 8 0 10 -4 -4 -262144 0 0')
 # ── Subosc controls (4 suboscs: sub1,sub2 under VCO1; sub3,sub4 under VCO2) ──
 # Each subosc needs: gate (from routing), parent_freq, division
 sub_x = [410, 460, 510, 560]
-sub_labels = ['S1÷', 'S2÷', 'S3÷', 'S4÷']
+sub_labels = ['S1/', 'S2/', 'S3/', 'S4/']
 sub_div = []
 sub_route = []
 for i, x in enumerate(sub_x):
@@ -105,45 +119,96 @@ for i, x in enumerate(sub_x):
     r = obj(x, 73, 'tgl 15 0 empty empty empty 20 8 0 10 -4 -4 -262144 0 0')
     sub_route.append(r)
 
-# ── Global VCF + LFO ─────────────────────────────────────────────────────────
-text(640, 25, 'CUTOFF')
-g_cut   = nbx(640, 40, 20, 2000, 'gcut')
-text(640, 58, 'RESO')
-g_res   = nbx(640, 73, 0, 10)
-text(700, 25, 'LFO RATE')
-lfo_rt  = nbx(700, 40, 0, 10)
-text(700, 58, 'LFO AMT')
-lfo_amt = nbx(700, 73, 0, 200)
+# ── Voice 1 VCF controls ──────────────────────────────────────────────────────
+text(640, 25, 'V1 CUTOFF')
+v1_gcut_nbx  = nbx(640, 40, 20, 8000, 'v1gcut')
+text(640, 58, 'V1 RESO')
+v1_gres_nbx  = nbx(640, 73, 0, 10)
 
-# ── FX controls ───────────────────────────────────────────────────────────────
-text(800, 135, 'FX DRIVE')
-fx_drv  = nbx(800, 150, 0, 1)
-text(800, 168, 'CHO RATE')
-fx_chr  = nbx(800, 183, 0, 5)
-text(860, 168, 'CHO DEPTH')
-fx_chd  = nbx(860, 183, 0, 20)
-text(920, 168, 'CHO MIX')
-fx_chm  = nbx(920, 183, 0, 1)
-text(800, 200, 'DLY TIME')
-fx_dt   = nbx(800, 215, 0, 1)
-text(860, 200, 'DLY FDBK')
-fx_df   = nbx(860, 215, 0, 0.95)
-text(920, 200, 'DLY MIX')
-fx_dm   = nbx(920, 215, 0, 1)
-text(800, 232, 'RVB SIZE')
-fx_rs   = nbx(800, 247, 0, 1)
-text(860, 232, 'RVB MIX')
-fx_rm   = nbx(860, 247, 0, 1)
+# ── Voice 2 VCF controls ──────────────────────────────────────────────────────
+text(740, 25, 'V2 CUTOFF')
+v2_gcut_nbx  = nbx(740, 40, 20, 8000, 'v2gcut')
+text(740, 58, 'V2 RESO')
+v2_gres_nbx  = nbx(740, 73, 0, 10)
+
+# ── Per-voice VCA level ───────────────────────────────────────────────────────
+text(640, 100, 'V1 LEVEL')
+v1_level_nbx = nbx(640, 115, 0, 1)
+text(740, 100, 'V2 LEVEL')
+v2_level_nbx = nbx(740, 115, 0, 1)
+
+# ── LFO ───────────────────────────────────────────────────────────────────────
+text(840, 25, 'LFO RATE')
+lfo_rt  = nbx(840, 40, 0, 10)
+text(840, 58, 'LFO AMT')
+lfo_amt = nbx(840, 73, 0, 200)
+
+# ── Voice 1 FX controls ───────────────────────────────────────────────────────
+text(960, 10, '--- V1 FX ---')
+text(960, 25, 'V1 DRIVE')
+v1_fx_drv = nbx(960, 40, 0, 1)
+text(960, 58, 'V1 CHO RATE')
+v1_fx_chr = nbx(960, 73, 0, 5)
+text(960, 90, 'V1 CHO DEPTH')
+v1_fx_chd = nbx(960, 105, 0, 20)
+text(960, 122, 'V1 CHO MIX')
+v1_fx_chm = nbx(960, 137, 0, 1)
+text(960, 154, 'V1 DLY TIME')
+v1_fx_dt  = nbx(960, 169, 0, 1)
+text(960, 186, 'V1 DLY FDBK')
+v1_fx_df  = nbx(960, 201, 0, 0.95)
+text(960, 218, 'V1 DLY MIX')
+v1_fx_dm  = nbx(960, 233, 0, 1)
+text(960, 250, 'V1 RVB SIZE')
+v1_fx_rs  = nbx(960, 265, 0, 1)
+text(960, 282, 'V1 RVB MIX')
+v1_fx_rm  = nbx(960, 297, 0, 1)
+
+# ── Voice 2 FX controls ───────────────────────────────────────────────────────
+text(1060, 10, '--- V2 FX ---')
+text(1060, 25, 'V2 DRIVE')
+v2_fx_drv = nbx(1060, 40, 0, 1)
+text(1060, 58, 'V2 CHO RATE')
+v2_fx_chr = nbx(1060, 73, 0, 5)
+text(1060, 90, 'V2 CHO DEPTH')
+v2_fx_chd = nbx(1060, 105, 0, 20)
+text(1060, 122, 'V2 CHO MIX')
+v2_fx_chm = nbx(1060, 137, 0, 1)
+text(1060, 154, 'V2 DLY TIME')
+v2_fx_dt  = nbx(1060, 169, 0, 1)
+text(1060, 186, 'V2 DLY FDBK')
+v2_fx_df  = nbx(1060, 201, 0, 0.95)
+text(1060, 218, 'V2 DLY MIX')
+v2_fx_dm  = nbx(1060, 233, 0, 1)
+text(1060, 250, 'V2 RVB SIZE')
+v2_fx_rs  = nbx(1060, 265, 0, 1)
+text(1060, 282, 'V2 RVB MIX')
+v2_fx_rm  = nbx(1060, 297, 0, 1)
+
+# ── Master FX controls ────────────────────────────────────────────────────────
+text(1160, 10, '--- MASTER FX ---')
+text(1160, 25, 'M DRIVE')
+m_fx_drv  = nbx(1160, 40, 0, 1)
+text(1160, 58, 'M CHO RATE')
+m_fx_chr  = nbx(1160, 73, 0, 5)
+text(1160, 90, 'M CHO DEPTH')
+m_fx_chd  = nbx(1160, 105, 0, 20)
+text(1160, 122, 'M CHO MIX')
+m_fx_chm  = nbx(1160, 137, 0, 1)
+text(1160, 154, 'M DLY TIME')
+m_fx_dt   = nbx(1160, 169, 0, 1)
+text(1160, 186, 'M DLY FDBK')
+m_fx_df   = nbx(1160, 201, 0, 0.95)
+text(1160, 218, 'M DLY MIX')
+m_fx_dm   = nbx(1160, 233, 0, 1)
+text(1160, 250, 'M RVB SIZE')
+m_fx_rs   = nbx(1160, 265, 0, 1)
+text(1160, 282, 'M RVB MIX')
+m_fx_rm   = nbx(1160, 297, 0, 1)
 
 # ── Routing spigots ───────────────────────────────────────────────────────────
 # For each of 6 oscillators: two spigots (one for seq1, one for seq2 bang)
 # The route toggle selects which spigot is open.
-# Layout: y=300 area
-
-# Helper: creates a routing pair for one oscillator.
-# Returns (spigot_s1, spigot_s2, gate_merge) indices.
-# We use [sel] to get 0/1 from toggle, then feed into spigot gates.
-# The merge is done with a [t b] — actually we just wire both spigots to the same inlet.
 
 # Routing for VCO1 (spigots at y=270)
 sp1a = obj(50,  270, 'spigot')   # seq1→vco1 (open when route==0)
@@ -166,7 +231,6 @@ sub_spa = []
 sub_spb = []
 sub_eq0 = []
 sub_eq1 = []
-sub_ys  = [270, 270, 270, 270]
 for i in range(4):
     x = sub_x[i]
     spa = obj(x,      270, 'spigot')
@@ -180,29 +244,53 @@ for i in range(4):
     sub_eq0.append(eq0)
     sub_eq1.append(eq1)
 
-# ── Sequencer rate divisors (inlet 2 of seq) ─────────────────────────────────
+# ── Sequencer controls ────────────────────────────────────────────────────────
 text(10,  395, 'SEQ1 RATE DIV')
 seq1_div = nbx(10, 410, 1, 8)
 text(400, 395, 'SEQ2 RATE DIV')
 seq2_div = nbx(400, 410, 1, 8)
 
-# ── Sequencers ────────────────────────────────────────────────────────────────
-seq1 = obj(10,  430, 'seq')
-seq2 = obj(400, 430, 'seq')
+# New per-sequencer controls: LENGTH, SWING, EUCLID HITS
+text(10, 428, 'LENGTH')
+seq1_length_nbx = nbx(10, 443, 1, 16)
+text(65, 428, 'SWING')
+seq1_swing_nbx  = nbx(65, 443, 0, 100)
+text(120, 428, 'EUCLID HITS')
+seq1_euclid_nbx = nbx(120, 443, 0, 16)
 
-# Clock → both sequencers; rate divisors → seq inlet 2
+text(400, 428, 'LENGTH')
+seq2_length_nbx = nbx(400, 443, 1, 16)
+text(455, 428, 'SWING')
+seq2_swing_nbx  = nbx(455, 443, 0, 100)
+text(510, 428, 'EUCLID HITS')
+seq2_euclid_nbx = nbx(510, 443, 0, 16)
+
+# ── Sequencers ────────────────────────────────────────────────────────────────
+seq1 = obj(10,  465, 'seq')
+seq2 = obj(400, 465, 'seq')
+
+# Clock → both sequencers; rate divisors → seq inlet 2 (used as rate div for now)
 wire(metro,    0, seq1, 0)
 wire(metro,    0, seq2, 0)
 wire(seq1_div, 0, seq1, 2)
 wire(seq2_div, 0, seq2, 2)
 
-# Seq1 bang → spigots for vco1, vco2, and all suboscs routed to seq1
+# New controls → sequencer inlets (per new seq interface)
+# inlet 2 = length, inlet 3 = swing, inlet 4 = euclid_hits
+wire(seq1_length_nbx, 0, seq1, 2)
+wire(seq1_swing_nbx,  0, seq1, 3)
+wire(seq1_euclid_nbx, 0, seq1, 4)
+wire(seq2_length_nbx, 0, seq2, 2)
+wire(seq2_swing_nbx,  0, seq2, 3)
+wire(seq2_euclid_nbx, 0, seq2, 4)
+
+# Seq1 gate bang → spigots for vco1, vco2, and all suboscs routed to seq1
 wire(seq1, 0, sp1a, 0)
 wire(seq1, 0, sp2a, 0)
 for spa in sub_spa:
     wire(seq1, 0, spa, 0)
 
-# Seq2 bang → spigots for vco1, vco2, and all suboscs routed to seq2
+# Seq2 gate bang → spigots for vco1, vco2, and all suboscs routed to seq2
 wire(seq2, 0, sp1b, 0)
 wire(seq2, 0, sp2b, 0)
 for spb in sub_spb:
@@ -219,6 +307,9 @@ wire(v1_dec,   0, vco1, 4)
 wire(v1_cut,   0, vco1, 5)
 wire(v1_res,   0, vco1, 6)
 
+# seq1 pitch outlet → vco1 freq inlet (overrides manual freq when step fires)
+wire(seq1, 1, vco1, 1)
+
 vco2 = obj(250, 570, 'vco~')
 wire(sp2a,  0, vco2, 0);  wire(sp2b, 0, vco2, 0)
 wire(v2_freq,  0, vco2, 1)
@@ -227,6 +318,9 @@ wire(v2_atk,   0, vco2, 3)
 wire(v2_dec,   0, vco2, 4)
 wire(v2_cut,   0, vco2, 5)
 wire(v2_res,   0, vco2, 6)
+
+# seq2 pitch outlet → vco2 freq inlet
+wire(seq2, 1, vco2, 1)
 
 # ── Subosc abstractions ───────────────────────────────────────────────────────
 # subosc~ inlets: 0=gate, 1=parent_freq, 2=division
@@ -241,121 +335,219 @@ for i in range(4):
     wire(sub_div[i],  0, so, 2)
     sub_oscs.append(so)
 
-# ── LFO ───────────────────────────────────────────────────────────────────────
-lfo_osc = obj(700, 100, 'osc~')
-lfo_mul = obj(700, 125, '*~')
-lfo_sig_amt = obj(760, 100, 'sig~')
-wire(lfo_rt,  0, lfo_osc,    0)   # rate
-wire(lfo_osc, 0, lfo_mul,    0)
-wire(lfo_amt, 0, lfo_sig_amt,0)
-wire(lfo_sig_amt,0,lfo_mul,  1)
+# seq1 pitch → sub1, sub2 freq inlets
+wire(seq1, 1, sub_oscs[0], 1)
+wire(seq1, 1, sub_oscs[1], 1)
 
-# ── Global VCF ────────────────────────────────────────────────────────────────
-# vcf~ inlets: 0=audio, 1=cutoff (signal), 2=Q (signal)
-gvcf   = obj(640, 620, 'vcf~')
-g_cut_sig = obj(640, 595, 'sig~')
-g_res_sig = obj(700, 595, 'sig~')
-# Cutoff = base_cutoff + lfo_modulation
-lfo_add = obj(640, 570, '+~')
-wire(g_cut,     0, g_cut_sig,  0)
-wire(g_cut_sig, 0, lfo_add,    0)
-wire(lfo_mul,   0, lfo_add,    1)
-wire(lfo_add,   0, gvcf,       1)   # cutoff signal
-wire(g_res,     0, g_res_sig,  0)
-wire(g_res_sig, 0, gvcf,       2)   # resonance signal
+# seq2 pitch → sub3, sub4 freq inlets
+wire(seq2, 1, sub_oscs[2], 1)
+wire(seq2, 1, sub_oscs[3], 1)
 
-# Mix all oscillators → global VCF audio inlet
-# Chain of +~ objects
-sum1 = obj(440, 620, '+~')
-sum2 = obj(480, 620, '+~')
-sum3 = obj(520, 620, '+~')
-sum4 = obj(560, 620, '+~')
-sum5 = obj(600, 620, '+~')
-wire(vco1, 0, sum1, 0)
-wire(vco2, 0, sum1, 1)
-wire(sub_oscs[0], 0, sum2, 0)
-wire(sum1,        0, sum2, 1)
-wire(sub_oscs[1], 0, sum3, 0)
-wire(sum2,        0, sum3, 1)
-wire(sub_oscs[2], 0, sum4, 0)
-wire(sum3,        0, sum4, 1)
-wire(sub_oscs[3], 0, sum5, 0)
-wire(sum4,        0, sum5, 1)
-wire(sum5,        0, gvcf, 0)   # into VCF audio inlet
+# ── LFO signal chain ──────────────────────────────────────────────────────────
+lfo_osc     = obj(840, 100, 'osc~')
+lfo_sig_amt = obj(900, 100, 'sig~')
+lfo_mul     = obj(840, 125, '*~')
+wire(lfo_rt,     0, lfo_osc,     0)   # LFO rate
+wire(lfo_osc,    0, lfo_mul,     0)
+wire(lfo_amt,    0, lfo_sig_amt, 0)
+wire(lfo_sig_amt,0, lfo_mul,     1)
 
-# ── FX chain ─────────────────────────────────────────────────────────────────
+# ── Voice 1 signal chain ──────────────────────────────────────────────────────
+# Voice 1 mix: VCO1 + sub1 + sub2
+v1_sum1 = obj(440, 620, '+~')
+v1_sum2 = obj(480, 620, '+~')
+wire(vco1,        0, v1_sum1, 0)
+wire(sub_oscs[0], 0, v1_sum1, 1)
+wire(sub_oscs[1], 0, v1_sum2, 0)
+wire(v1_sum1,     0, v1_sum2, 1)
+
+# Voice 1 VCF
+v1_gvcf    = obj(640, 680, 'vcf~')
+v1_cut_sig = obj(640, 640, 'sig~')
+v1_res_sig = obj(700, 640, 'sig~')
+v1_lfo_add = obj(640, 660, '+~')
+wire(v1_gcut_nbx, 0, v1_cut_sig, 0)
+wire(v1_cut_sig,  0, v1_lfo_add, 0)
+wire(lfo_mul,     0, v1_lfo_add, 1)
+wire(v1_lfo_add,  0, v1_gvcf,    1)   # cutoff (signal)
+wire(v1_gres_nbx, 0, v1_res_sig, 0)
+wire(v1_res_sig,  0, v1_gvcf,    2)   # resonance (signal)
+wire(v1_sum2,     0, v1_gvcf,    0)   # audio in
+
+# Voice 1 VCA: [*~] scaled by level
+v1_vca_sig = obj(760, 640, 'sig~')
+v1_vca     = obj(640, 710, '*~')
+wire(v1_gvcf,     0, v1_vca,     0)
+wire(v1_level_nbx,0, v1_vca_sig, 0)
+wire(v1_vca_sig,  0, v1_vca,     1)
+
+# ── Voice 2 signal chain ──────────────────────────────────────────────────────
+# Voice 2 mix: VCO2 + sub3 + sub4
+v2_sum1 = obj(540, 620, '+~')
+v2_sum2 = obj(580, 620, '+~')
+wire(vco2,        0, v2_sum1, 0)
+wire(sub_oscs[2], 0, v2_sum1, 1)
+wire(sub_oscs[3], 0, v2_sum2, 0)
+wire(v2_sum1,     0, v2_sum2, 1)
+
+# Voice 2 VCF
+v2_gvcf    = obj(740, 680, 'vcf~')
+v2_cut_sig = obj(740, 640, 'sig~')
+v2_res_sig = obj(800, 640, 'sig~')
+v2_lfo_add = obj(740, 660, '+~')
+wire(v2_gcut_nbx, 0, v2_cut_sig, 0)
+wire(v2_cut_sig,  0, v2_lfo_add, 0)
+wire(lfo_mul,     0, v2_lfo_add, 1)
+wire(v2_lfo_add,  0, v2_gvcf,    1)   # cutoff (signal)
+wire(v2_gres_nbx, 0, v2_res_sig, 0)
+wire(v2_res_sig,  0, v2_gvcf,    2)   # resonance (signal)
+wire(v2_sum2,     0, v2_gvcf,    0)   # audio in
+
+# Voice 2 VCA
+v2_vca_sig = obj(860, 640, 'sig~')
+v2_vca     = obj(740, 710, '*~')
+wire(v2_gvcf,     0, v2_vca,     0)
+wire(v2_level_nbx,0, v2_vca_sig, 0)
+wire(v2_vca_sig,  0, v2_vca,     1)
+
+# ── Voice 1 FX ────────────────────────────────────────────────────────────────
 # fx~ inlets: 0=audio~, 1=drive, 2=cho_rate, 3=cho_dep, 4=cho_mix,
 #             5=dly_time, 6=dly_fdbk, 7=dly_mix, 8=rvb_size, 9=rvb_mix
-fx = obj(800, 650, 'fx~')
-wire(gvcf,  0, fx, 0)       # VCF LP output → FX audio in
-wire(fx_drv,0, fx, 1)
-wire(fx_chr,0, fx, 2)
-wire(fx_chd,0, fx, 3)
-wire(fx_chm,0, fx, 4)
-wire(fx_dt, 0, fx, 5)
-wire(fx_df, 0, fx, 6)
-wire(fx_dm, 0, fx, 7)
-wire(fx_rs, 0, fx, 8)
-wire(fx_rm, 0, fx, 9)
+v1_fx = obj(960, 750, 'fx~')
+wire(v1_vca,    0, v1_fx, 0)
+wire(v1_fx_drv, 0, v1_fx, 1)
+wire(v1_fx_chr, 0, v1_fx, 2)
+wire(v1_fx_chd, 0, v1_fx, 3)
+wire(v1_fx_chm, 0, v1_fx, 4)
+wire(v1_fx_dt,  0, v1_fx, 5)
+wire(v1_fx_df,  0, v1_fx, 6)
+wire(v1_fx_dm,  0, v1_fx, 7)
+wire(v1_fx_rs,  0, v1_fx, 8)
+wire(v1_fx_rm,  0, v1_fx, 9)
+
+# ── Voice 2 FX ────────────────────────────────────────────────────────────────
+v2_fx = obj(1060, 750, 'fx~')
+wire(v2_vca,    0, v2_fx, 0)
+wire(v2_fx_drv, 0, v2_fx, 1)
+wire(v2_fx_chr, 0, v2_fx, 2)
+wire(v2_fx_chd, 0, v2_fx, 3)
+wire(v2_fx_chm, 0, v2_fx, 4)
+wire(v2_fx_dt,  0, v2_fx, 5)
+wire(v2_fx_df,  0, v2_fx, 6)
+wire(v2_fx_dm,  0, v2_fx, 7)
+wire(v2_fx_rs,  0, v2_fx, 8)
+wire(v2_fx_rm,  0, v2_fx, 9)
+
+# ── Master mix and FX ─────────────────────────────────────────────────────────
+# Sum L and R from both voices
+master_sumL = obj(1100, 800, '+~')
+master_sumR = obj(1140, 800, '+~')
+wire(v1_fx, 0, master_sumL, 0)
+wire(v2_fx, 0, master_sumL, 1)
+wire(v1_fx, 1, master_sumR, 0)
+wire(v2_fx, 1, master_sumR, 1)
+
+# Master FX
+master_fx = obj(1160, 830, 'fx~')
+wire(master_sumL, 0, master_fx, 0)
+wire(m_fx_drv,    0, master_fx, 1)
+wire(m_fx_chr,    0, master_fx, 2)
+wire(m_fx_chd,    0, master_fx, 3)
+wire(m_fx_chm,    0, master_fx, 4)
+wire(m_fx_dt,     0, master_fx, 5)
+wire(m_fx_df,     0, master_fx, 6)
+wire(m_fx_dm,     0, master_fx, 7)
+wire(m_fx_rs,     0, master_fx, 8)
+wire(m_fx_rm,     0, master_fx, 9)
 
 # ── DAC ───────────────────────────────────────────────────────────────────────
-dac = obj(900, 700, 'dac~')
-wire(fx, 0, dac, 0)   # L
-wire(fx, 1, dac, 1)   # R
+dac = obj(1200, 900, 'dac~')
+wire(master_fx, 0, dac, 0)   # L
+wire(master_fx, 1, dac, 1)   # R
 
 # ── OSC receive (FUDI over UDP — vanilla Pd, no externals) ───────────────────
 # osc_bridge.py converts OSC UDP (port 9001) → FUDI UDP (port 9000)
 # FUDI format: "symbol value;\n"  →  [netreceive] outputs list → [route] dispatches
-
 params = [
-    ('vco1_freq',  v1_freq),
-    ('vco1_wave',  v1_wave),
-    ('vco1_atk',   v1_atk),
-    ('vco1_dec',   v1_dec),
-    ('vco1_cut',   v1_cut),
-    ('vco1_res',   v1_res),
-    ('vco1_route', v1_route),
-    ('vco2_freq',  v2_freq),
-    ('vco2_wave',  v2_wave),
-    ('vco2_atk',   v2_atk),
-    ('vco2_dec',   v2_dec),
-    ('vco2_cut',   v2_cut),
-    ('vco2_res',   v2_res),
-    ('vco2_route', v2_route),
-    ('sub1_div',   sub_div[0]),
-    ('sub1_route', sub_route[0]),
-    ('sub2_div',   sub_div[1]),
-    ('sub2_route', sub_route[1]),
-    ('sub3_div',   sub_div[2]),
-    ('sub3_route', sub_route[2]),
-    ('sub4_div',   sub_div[3]),
-    ('sub4_route', sub_route[3]),
-    ('gcut',       g_cut),
-    ('gres',       g_res),
-    ('lfo_rt',     lfo_rt),
-    ('lfo_amt',    lfo_amt),
-    ('tempo',      tempo_nbx),
-    ('seq1_div',   seq1_div),
-    ('seq2_div',   seq2_div),
-    ('fx_drv',     fx_drv),
-    ('fx_chr',     fx_chr),
-    ('fx_chd',     fx_chd),
-    ('fx_chm',     fx_chm),
-    ('fx_dt',      fx_dt),
-    ('fx_df',      fx_df),
-    ('fx_dm',      fx_dm),
-    ('fx_rs',      fx_rs),
-    ('fx_rm',      fx_rm),
+    ('vco1_freq',   v1_freq),
+    ('vco1_wave',   v1_wave),
+    ('vco1_atk',    v1_atk),
+    ('vco1_dec',    v1_dec),
+    ('vco1_cut',    v1_cut),
+    ('vco1_res',    v1_res),
+    ('vco1_route',  v1_route),
+    ('vco2_freq',   v2_freq),
+    ('vco2_wave',   v2_wave),
+    ('vco2_atk',    v2_atk),
+    ('vco2_dec',    v2_dec),
+    ('vco2_cut',    v2_cut),
+    ('vco2_res',    v2_res),
+    ('vco2_route',  v2_route),
+    ('sub1_div',    sub_div[0]),
+    ('sub1_route',  sub_route[0]),
+    ('sub2_div',    sub_div[1]),
+    ('sub2_route',  sub_route[1]),
+    ('sub3_div',    sub_div[2]),
+    ('sub3_route',  sub_route[2]),
+    ('sub4_div',    sub_div[3]),
+    ('sub4_route',  sub_route[3]),
+    ('lfo_rt',      lfo_rt),
+    ('lfo_amt',     lfo_amt),
+    ('tempo',       tempo_nbx),
+    ('seq1_div',    seq1_div),
+    ('seq2_div',    seq2_div),
+    ('seq1_len',    seq1_length_nbx),
+    ('seq1_swing',  seq1_swing_nbx),
+    ('seq1_euclid', seq1_euclid_nbx),
+    ('seq2_len',    seq2_length_nbx),
+    ('seq2_swing',  seq2_swing_nbx),
+    ('seq2_euclid', seq2_euclid_nbx),
+    ('v1gcut',      v1_gcut_nbx),
+    ('v1gres',      v1_gres_nbx),
+    ('v1level',     v1_level_nbx),
+    ('v2gcut',      v2_gcut_nbx),
+    ('v2gres',      v2_gres_nbx),
+    ('v2level',     v2_level_nbx),
+    # Voice 1 FX
+    ('v1_drive',    v1_fx_drv),
+    ('v1_cho_rt',   v1_fx_chr),
+    ('v1_cho_dep',  v1_fx_chd),
+    ('v1_cho_mix',  v1_fx_chm),
+    ('v1_dly_t',    v1_fx_dt),
+    ('v1_dly_fb',   v1_fx_df),
+    ('v1_dly_mix',  v1_fx_dm),
+    ('v1_rvb_sz',   v1_fx_rs),
+    ('v1_rvb_mix',  v1_fx_rm),
+    # Voice 2 FX
+    ('v2_drive',    v2_fx_drv),
+    ('v2_cho_rt',   v2_fx_chr),
+    ('v2_cho_dep',  v2_fx_chd),
+    ('v2_cho_mix',  v2_fx_chm),
+    ('v2_dly_t',    v2_fx_dt),
+    ('v2_dly_fb',   v2_fx_df),
+    ('v2_dly_mix',  v2_fx_dm),
+    ('v2_rvb_sz',   v2_fx_rs),
+    ('v2_rvb_mix',  v2_fx_rm),
+    # Master FX
+    ('m_drive',     m_fx_drv),
+    ('m_cho_rt',    m_fx_chr),
+    ('m_cho_dep',   m_fx_chd),
+    ('m_cho_mix',   m_fx_chm),
+    ('m_dly_t',     m_fx_dt),
+    ('m_dly_fb',    m_fx_df),
+    ('m_dly_mix',   m_fx_dm),
+    ('m_rvb_sz',    m_fx_rs),
+    ('m_rvb_mix',   m_fx_rm),
 ]
 param_names = ' '.join(p[0] for p in params)
-osc_recv  = obj(1000, 300, 'netreceive 9000 1')
-route_obj = obj(1000, 325, f'route {param_names}')
+osc_recv  = obj(1280, 300, 'netreceive 9000 1')
+route_obj = obj(1280, 325, f'route {param_names}')
 wire(osc_recv, 0, route_obj, 0)
 for i, (name, target) in enumerate(params):
     wire(route_obj, i, target, 0)
 
 # ── Emit patch ────────────────────────────────────────────────────────────────
-lines = ['#N canvas 50 50 1100 800 10;']
+lines = ['#N canvas 50 50 1400 1000 10;']
 for kind, x, y, body in objs:
     if kind == 'obj':
         lines.append(f'#X obj {x} {y} {body};')
@@ -370,4 +562,22 @@ for src, out, dst, inp in conns:
     lines.append(f'#X connect {src} {out} {dst} {inp};')
 
 output = '\n'.join(lines) + '\n'
+
+# ── Validation ────────────────────────────────────────────────────────────────
+n_objs = len(objs)
+errors = []
+for src, out, dst, inp in conns:
+    if src >= n_objs:
+        errors.append(f'ERROR: connect src={src} >= n_objs={n_objs}')
+    if dst >= n_objs:
+        errors.append(f'ERROR: connect dst={dst} >= n_objs={n_objs}')
+
+print(f'# Objects: {n_objs}', file=sys.stderr)
+print(f'# Connections: {len(conns)}', file=sys.stderr)
+if errors:
+    for e in errors:
+        print(e, file=sys.stderr)
+else:
+    print('Validation OK — all connect indices in range', file=sys.stderr)
+
 print(output, end='')

@@ -93,22 +93,27 @@ Paid app (iOS/Android). Uses the old XML format.
 | `/sub1/div` | 1–16 (int) | Sub-osc 1 division |
 | `/sub1/route` | 0/1 | Route sub1 to SEQ1(0) or SEQ2(1) |
 | `/sub2/…` `/sub3/…` `/sub4/…` | — | Same for sub-oscs 2–4 |
-| `/vcf/cutoff` | 20–2000 Hz | Global VCF cutoff |
-| `/vcf/res` | 0–10 | Global VCF resonance |
-| `/lfo/rate` | 0–10 Hz | LFO rate |
+| `/v1/cutoff` | 20–8000 Hz | Voice 1 VCF cutoff |
+| `/v1/res` | 0–10 | Voice 1 VCF resonance |
+| `/v1/level` | 0–1 | Voice 1 VCA level |
+| `/v2/cutoff` | 20–8000 Hz | Voice 2 VCF cutoff |
+| `/v2/res` | 0–10 | Voice 2 VCF resonance |
+| `/v2/level` | 0–1 | Voice 2 VCA level |
+| `/lfo/rate` | 0–10 Hz | LFO rate (modulates both voice VCFs) |
 | `/lfo/amount` | 0–200 | LFO mod depth (Hz) |
 | `/tempo` | 30–240 BPM | Master tempo |
 | `/seq1/rate` | 1–8 (int) | SEQ 1 clock divisor |
+| `/seq1/length` | 1–16 (int) | SEQ 1 pattern length |
+| `/seq1/swing` | 0–100 | SEQ 1 swing % |
+| `/seq1/euclid` | 0–16 (int) | SEQ 1 Euclidean hits (0=off) |
 | `/seq2/rate` | 1–8 (int) | SEQ 2 clock divisor |
-| `/fx/drive` | 0–1 | Overdrive amount |
-| `/fx/cho_rate` | 0–5 Hz | Chorus LFO rate |
-| `/fx/cho_depth` | 0–20 ms | Chorus depth |
-| `/fx/cho_mix` | 0–1 | Chorus wet mix |
-| `/fx/dly_time` | 0–1 s | Delay time |
-| `/fx/dly_fdbk` | 0–0.95 | Delay feedback |
-| `/fx/dly_mix` | 0–1 | Delay wet mix |
-| `/fx/rvb_size` | 0–1 | Reverb size |
-| `/fx/rvb_mix` | 0–1 | Reverb wet mix |
+| `/seq2/length` | 1–16 (int) | SEQ 2 pattern length |
+| `/seq2/swing` | 0–100 | SEQ 2 swing % |
+| `/seq2/euclid` | 0–16 (int) | SEQ 2 Euclidean hits (0=off) |
+| `/v1fx/drive` | 0–1 | Voice 1 overdrive |
+| `/v1fx/cho_rate` … `/v1fx/rvb_mix` | — | Voice 1 chorus/delay/reverb |
+| `/v2fx/drive` … `/v2fx/rvb_mix` | — | Voice 2 FX (same params) |
+| `/mfx/drive` … `/mfx/rvb_mix` | — | Master bus FX (same params) |
 
 ---
 
