@@ -1,0 +1,687 @@
+[
+  {
+    "type": "tab",
+    "id": "tab_vcos",
+    "label": "VCOs",
+    "widgets": [
+      {
+        "type": "panel",
+        "id": "panel_vco1",
+        "label": "VCO 1",
+        "left": "0%",
+        "top": "0%",
+        "width": "50%",
+        "height": "100%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "knob",
+            "id": "vco1_freq_knob",
+            "label": "FREQ",
+            "address": "/vco1/freq",
+            "value": 440,
+            "range": {"min": 20, "max": 2000},
+            "logScale": true,
+            "color": "#c04040",
+            "left": "0%",
+            "top": "2%",
+            "width": "33%",
+            "height": "28%"
+          },
+          {
+            "type": "knob",
+            "id": "vco1_cut_knob",
+            "label": "VCF CUT",
+            "address": "/vco1/cut",
+            "value": 2000,
+            "range": {"min": 80, "max": 8000},
+            "logScale": true,
+            "color": "#c04040",
+            "left": "33%",
+            "top": "2%",
+            "width": "33%",
+            "height": "28%"
+          },
+          {
+            "type": "knob",
+            "id": "vco1_res_knob",
+            "label": "VCF RES",
+            "address": "/vco1/res",
+            "value": 0,
+            "range": {"min": 0, "max": 10},
+            "color": "#c04040",
+            "left": "66%",
+            "top": "2%",
+            "width": "34%",
+            "height": "28%"
+          },
+          {
+            "type": "slider",
+            "id": "vco1_wave_sl",
+            "label": "WAVE",
+            "address": "/vco1/wave",
+            "value": 0,
+            "range": {"min": 0, "max": 3},
+            "steps": 4,
+            "color": "#c04040",
+            "left": "0%",
+            "top": "32%",
+            "width": "50%",
+            "height": "22%"
+          },
+          {
+            "type": "slider",
+            "id": "vco1_atk_sl",
+            "label": "ATK",
+            "address": "/vco1/atk",
+            "value": 0.01,
+            "range": {"min": 0, "max": 1},
+            "color": "#c04040",
+            "left": "50%",
+            "top": "32%",
+            "width": "25%",
+            "height": "22%"
+          },
+          {
+            "type": "slider",
+            "id": "vco1_dec_sl",
+            "label": "DEC",
+            "address": "/vco1/dec",
+            "value": 0.3,
+            "range": {"min": 0, "max": 1},
+            "color": "#c04040",
+            "left": "75%",
+            "top": "32%",
+            "width": "25%",
+            "height": "22%"
+          },
+          {
+            "type": "toggle",
+            "id": "vco1_route_tgl",
+            "label": "ROUTE: SEQ2",
+            "address": "/vco1/route",
+            "value": 0,
+            "color": "#c04040",
+            "left": "25%",
+            "top": "56%",
+            "width": "50%",
+            "height": "14%"
+          }
+        ]
+      },
+      {
+        "type": "panel",
+        "id": "panel_vco2",
+        "label": "VCO 2",
+        "left": "50%",
+        "top": "0%",
+        "width": "50%",
+        "height": "100%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "knob",
+            "id": "vco2_freq_knob",
+            "label": "FREQ",
+            "address": "/vco2/freq",
+            "value": 220,
+            "range": {"min": 20, "max": 2000},
+            "logScale": true,
+            "color": "#c04040",
+            "left": "0%",
+            "top": "2%",
+            "width": "33%",
+            "height": "28%"
+          },
+          {
+            "type": "knob",
+            "id": "vco2_cut_knob",
+            "label": "VCF CUT",
+            "address": "/vco2/cut",
+            "value": 2000,
+            "range": {"min": 80, "max": 8000},
+            "logScale": true,
+            "color": "#c04040",
+            "left": "33%",
+            "top": "2%",
+            "width": "33%",
+            "height": "28%"
+          },
+          {
+            "type": "knob",
+            "id": "vco2_res_knob",
+            "label": "VCF RES",
+            "address": "/vco2/res",
+            "value": 0,
+            "range": {"min": 0, "max": 10},
+            "color": "#c04040",
+            "left": "66%",
+            "top": "2%",
+            "width": "34%",
+            "height": "28%"
+          },
+          {
+            "type": "slider",
+            "id": "vco2_wave_sl",
+            "label": "WAVE",
+            "address": "/vco2/wave",
+            "value": 0,
+            "range": {"min": 0, "max": 3},
+            "steps": 4,
+            "color": "#c04040",
+            "left": "0%",
+            "top": "32%",
+            "width": "50%",
+            "height": "22%"
+          },
+          {
+            "type": "slider",
+            "id": "vco2_atk_sl",
+            "label": "ATK",
+            "address": "/vco2/atk",
+            "value": 0.01,
+            "range": {"min": 0, "max": 1},
+            "color": "#c04040",
+            "left": "50%",
+            "top": "32%",
+            "width": "25%",
+            "height": "22%"
+          },
+          {
+            "type": "slider",
+            "id": "vco2_dec_sl",
+            "label": "DEC",
+            "address": "/vco2/dec",
+            "value": 0.3,
+            "range": {"min": 0, "max": 1},
+            "color": "#c04040",
+            "left": "75%",
+            "top": "32%",
+            "width": "25%",
+            "height": "22%"
+          },
+          {
+            "type": "toggle",
+            "id": "vco2_route_tgl",
+            "label": "ROUTE: SEQ2",
+            "address": "/vco2/route",
+            "value": 0,
+            "color": "#c04040",
+            "left": "25%",
+            "top": "56%",
+            "width": "50%",
+            "height": "14%"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "tab",
+    "id": "tab_suboscs_seq",
+    "label": "SUBOSCS + SEQ",
+    "widgets": [
+      {
+        "type": "panel",
+        "id": "panel_sub1",
+        "label": "SUB 1",
+        "left": "0%",
+        "top": "0%",
+        "width": "25%",
+        "height": "65%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "slider",
+            "id": "sub1_div_sl",
+            "label": "DIV",
+            "address": "/sub1/div",
+            "value": 2,
+            "range": {"min": 1, "max": 16},
+            "steps": 16,
+            "color": "#c04040",
+            "left": "10%",
+            "top": "5%",
+            "width": "80%",
+            "height": "65%"
+          },
+          {
+            "type": "toggle",
+            "id": "sub1_route_tgl",
+            "label": "ROUTE: SEQ2",
+            "address": "/sub1/route",
+            "value": 0,
+            "color": "#c04040",
+            "left": "10%",
+            "top": "75%",
+            "width": "80%",
+            "height": "16%"
+          }
+        ]
+      },
+      {
+        "type": "panel",
+        "id": "panel_sub2",
+        "label": "SUB 2",
+        "left": "25%",
+        "top": "0%",
+        "width": "25%",
+        "height": "65%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "slider",
+            "id": "sub2_div_sl",
+            "label": "DIV",
+            "address": "/sub2/div",
+            "value": 3,
+            "range": {"min": 1, "max": 16},
+            "steps": 16,
+            "color": "#c04040",
+            "left": "10%",
+            "top": "5%",
+            "width": "80%",
+            "height": "65%"
+          },
+          {
+            "type": "toggle",
+            "id": "sub2_route_tgl",
+            "label": "ROUTE: SEQ2",
+            "address": "/sub2/route",
+            "value": 0,
+            "color": "#c04040",
+            "left": "10%",
+            "top": "75%",
+            "width": "80%",
+            "height": "16%"
+          }
+        ]
+      },
+      {
+        "type": "panel",
+        "id": "panel_sub3",
+        "label": "SUB 3",
+        "left": "50%",
+        "top": "0%",
+        "width": "25%",
+        "height": "65%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "slider",
+            "id": "sub3_div_sl",
+            "label": "DIV",
+            "address": "/sub3/div",
+            "value": 4,
+            "range": {"min": 1, "max": 16},
+            "steps": 16,
+            "color": "#c04040",
+            "left": "10%",
+            "top": "5%",
+            "width": "80%",
+            "height": "65%"
+          },
+          {
+            "type": "toggle",
+            "id": "sub3_route_tgl",
+            "label": "ROUTE: SEQ2",
+            "address": "/sub3/route",
+            "value": 0,
+            "color": "#c04040",
+            "left": "10%",
+            "top": "75%",
+            "width": "80%",
+            "height": "16%"
+          }
+        ]
+      },
+      {
+        "type": "panel",
+        "id": "panel_sub4",
+        "label": "SUB 4",
+        "left": "75%",
+        "top": "0%",
+        "width": "25%",
+        "height": "65%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "slider",
+            "id": "sub4_div_sl",
+            "label": "DIV",
+            "address": "/sub4/div",
+            "value": 6,
+            "range": {"min": 1, "max": 16},
+            "steps": 16,
+            "color": "#c04040",
+            "left": "10%",
+            "top": "5%",
+            "width": "80%",
+            "height": "65%"
+          },
+          {
+            "type": "toggle",
+            "id": "sub4_route_tgl",
+            "label": "ROUTE: SEQ2",
+            "address": "/sub4/route",
+            "value": 0,
+            "color": "#c04040",
+            "left": "10%",
+            "top": "75%",
+            "width": "80%",
+            "height": "16%"
+          }
+        ]
+      },
+      {
+        "type": "panel",
+        "id": "panel_seq",
+        "label": "SEQUENCER",
+        "left": "0%",
+        "top": "67%",
+        "width": "100%",
+        "height": "33%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "knob",
+            "id": "tempo_knob",
+            "label": "TEMPO",
+            "address": "/tempo",
+            "value": 120,
+            "range": {"min": 30, "max": 240},
+            "color": "#c04040",
+            "left": "0%",
+            "top": "5%",
+            "width": "33%",
+            "height": "85%"
+          },
+          {
+            "type": "slider",
+            "id": "seq1_rate_sl",
+            "label": "SEQ1 RATE",
+            "address": "/seq1/rate",
+            "value": 1,
+            "range": {"min": 1, "max": 8},
+            "steps": 8,
+            "color": "#c04040",
+            "left": "34%",
+            "top": "5%",
+            "width": "30%",
+            "height": "85%"
+          },
+          {
+            "type": "slider",
+            "id": "seq2_rate_sl",
+            "label": "SEQ2 RATE",
+            "address": "/seq2/rate",
+            "value": 1,
+            "range": {"min": 1, "max": 8},
+            "steps": 8,
+            "color": "#c04040",
+            "left": "66%",
+            "top": "5%",
+            "width": "30%",
+            "height": "85%"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "tab",
+    "id": "tab_vcf_lfo",
+    "label": "VCF + LFO",
+    "widgets": [
+      {
+        "type": "panel",
+        "id": "panel_vcf",
+        "label": "VCF",
+        "left": "0%",
+        "top": "0%",
+        "width": "50%",
+        "height": "100%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "knob",
+            "id": "vcf_cutoff_knob",
+            "label": "CUTOFF",
+            "address": "/vcf/cutoff",
+            "value": 800,
+            "range": {"min": 20, "max": 2000},
+            "logScale": true,
+            "color": "#c04040",
+            "left": "5%",
+            "top": "5%",
+            "width": "90%",
+            "height": "45%"
+          },
+          {
+            "type": "knob",
+            "id": "vcf_res_knob",
+            "label": "RESONANCE",
+            "address": "/vcf/res",
+            "value": 0,
+            "range": {"min": 0, "max": 10},
+            "color": "#c04040",
+            "left": "5%",
+            "top": "52%",
+            "width": "90%",
+            "height": "42%"
+          }
+        ]
+      },
+      {
+        "type": "panel",
+        "id": "panel_lfo",
+        "label": "LFO",
+        "left": "50%",
+        "top": "0%",
+        "width": "50%",
+        "height": "100%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "knob",
+            "id": "lfo_rate_knob",
+            "label": "RATE",
+            "address": "/lfo/rate",
+            "value": 1,
+            "range": {"min": 0, "max": 10},
+            "color": "#c04040",
+            "left": "5%",
+            "top": "5%",
+            "width": "90%",
+            "height": "45%"
+          },
+          {
+            "type": "knob",
+            "id": "lfo_amount_knob",
+            "label": "AMOUNT",
+            "address": "/lfo/amount",
+            "value": 0,
+            "range": {"min": 0, "max": 200},
+            "color": "#c04040",
+            "left": "5%",
+            "top": "52%",
+            "width": "90%",
+            "height": "42%"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "tab",
+    "id": "tab_fx",
+    "label": "FX",
+    "widgets": [
+      {
+        "type": "panel",
+        "id": "panel_drive",
+        "label": "DRIVE",
+        "left": "0%",
+        "top": "0%",
+        "width": "20%",
+        "height": "100%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "knob",
+            "id": "fx_drive_knob",
+            "label": "DRIVE",
+            "address": "/fx/drive",
+            "value": 0,
+            "range": {"min": 0, "max": 1},
+            "color": "#c04040",
+            "left": "10%",
+            "top": "15%",
+            "width": "80%",
+            "height": "40%"
+          }
+        ]
+      },
+      {
+        "type": "panel",
+        "id": "panel_chorus",
+        "label": "CHORUS",
+        "left": "20%",
+        "top": "0%",
+        "width": "27%",
+        "height": "100%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "knob",
+            "id": "fx_cho_rate_knob",
+            "label": "RATE",
+            "address": "/fx/cho_rate",
+            "value": 1,
+            "range": {"min": 0, "max": 5},
+            "color": "#c04040",
+            "left": "3%",
+            "top": "5%",
+            "width": "44%",
+            "height": "40%"
+          },
+          {
+            "type": "knob",
+            "id": "fx_cho_depth_knob",
+            "label": "DEPTH",
+            "address": "/fx/cho_depth",
+            "value": 5,
+            "range": {"min": 0, "max": 20},
+            "color": "#c04040",
+            "left": "53%",
+            "top": "5%",
+            "width": "44%",
+            "height": "40%"
+          },
+          {
+            "type": "knob",
+            "id": "fx_cho_mix_knob",
+            "label": "MIX",
+            "address": "/fx/cho_mix",
+            "value": 0,
+            "range": {"min": 0, "max": 1},
+            "color": "#c04040",
+            "left": "28%",
+            "top": "52%",
+            "width": "44%",
+            "height": "40%"
+          }
+        ]
+      },
+      {
+        "type": "panel",
+        "id": "panel_delay",
+        "label": "DELAY",
+        "left": "47%",
+        "top": "0%",
+        "width": "27%",
+        "height": "100%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "knob",
+            "id": "fx_dly_time_knob",
+            "label": "TIME",
+            "address": "/fx/dly_time",
+            "value": 0.25,
+            "range": {"min": 0, "max": 1},
+            "color": "#c04040",
+            "left": "3%",
+            "top": "5%",
+            "width": "44%",
+            "height": "40%"
+          },
+          {
+            "type": "knob",
+            "id": "fx_dly_fdbk_knob",
+            "label": "FDBK",
+            "address": "/fx/dly_fdbk",
+            "value": 0.3,
+            "range": {"min": 0, "max": 0.95},
+            "color": "#c04040",
+            "left": "53%",
+            "top": "5%",
+            "width": "44%",
+            "height": "40%"
+          },
+          {
+            "type": "knob",
+            "id": "fx_dly_mix_knob",
+            "label": "MIX",
+            "address": "/fx/dly_mix",
+            "value": 0,
+            "range": {"min": 0, "max": 1},
+            "color": "#c04040",
+            "left": "28%",
+            "top": "52%",
+            "width": "44%",
+            "height": "40%"
+          }
+        ]
+      },
+      {
+        "type": "panel",
+        "id": "panel_reverb",
+        "label": "REVERB",
+        "left": "74%",
+        "top": "0%",
+        "width": "26%",
+        "height": "100%",
+        "color": "#c04040",
+        "widgets": [
+          {
+            "type": "knob",
+            "id": "fx_rvb_size_knob",
+            "label": "SIZE",
+            "address": "/fx/rvb_size",
+            "value": 0.5,
+            "range": {"min": 0, "max": 1},
+            "color": "#c04040",
+            "left": "5%",
+            "top": "5%",
+            "width": "90%",
+            "height": "40%"
+          },
+          {
+            "type": "knob",
+            "id": "fx_rvb_mix_knob",
+            "label": "MIX",
+            "address": "/fx/rvb_mix",
+            "value": 0,
+            "range": {"min": 0, "max": 1},
+            "color": "#c04040",
+            "left": "5%",
+            "top": "52%",
+            "width": "90%",
+            "height": "40%"
+          }
+        ]
+      }
+    ]
+  }
+]

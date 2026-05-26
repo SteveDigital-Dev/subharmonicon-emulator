@@ -303,6 +303,57 @@ dac = obj(900, 700, 'dac~')
 wire(fx, 0, dac, 0)   # L
 wire(fx, 1, dac, 1)   # R
 
+# ── OSC receive (FUDI over UDP — vanilla Pd, no externals) ───────────────────
+# osc_bridge.py converts OSC UDP (port 9001) → FUDI UDP (port 9000)
+# FUDI format: "symbol value;\n"  →  [netreceive] outputs list → [route] dispatches
+
+params = [
+    ('vco1_freq',  v1_freq),
+    ('vco1_wave',  v1_wave),
+    ('vco1_atk',   v1_atk),
+    ('vco1_dec',   v1_dec),
+    ('vco1_cut',   v1_cut),
+    ('vco1_res',   v1_res),
+    ('vco1_route', v1_route),
+    ('vco2_freq',  v2_freq),
+    ('vco2_wave',  v2_wave),
+    ('vco2_atk',   v2_atk),
+    ('vco2_dec',   v2_dec),
+    ('vco2_cut',   v2_cut),
+    ('vco2_res',   v2_res),
+    ('vco2_route', v2_route),
+    ('sub1_div',   sub_div[0]),
+    ('sub1_route', sub_route[0]),
+    ('sub2_div',   sub_div[1]),
+    ('sub2_route', sub_route[1]),
+    ('sub3_div',   sub_div[2]),
+    ('sub3_route', sub_route[2]),
+    ('sub4_div',   sub_div[3]),
+    ('sub4_route', sub_route[3]),
+    ('gcut',       g_cut),
+    ('gres',       g_res),
+    ('lfo_rt',     lfo_rt),
+    ('lfo_amt',    lfo_amt),
+    ('tempo',      tempo_nbx),
+    ('seq1_div',   seq1_div),
+    ('seq2_div',   seq2_div),
+    ('fx_drv',     fx_drv),
+    ('fx_chr',     fx_chr),
+    ('fx_chd',     fx_chd),
+    ('fx_chm',     fx_chm),
+    ('fx_dt',      fx_dt),
+    ('fx_df',      fx_df),
+    ('fx_dm',      fx_dm),
+    ('fx_rs',      fx_rs),
+    ('fx_rm',      fx_rm),
+]
+param_names = ' '.join(p[0] for p in params)
+osc_recv  = obj(1000, 300, 'netreceive 9000 1')
+route_obj = obj(1000, 325, f'route {param_names}')
+wire(osc_recv, 0, route_obj, 0)
+for i, (name, target) in enumerate(params):
+    wire(route_obj, i, target, 0)
+
 # ── Emit patch ────────────────────────────────────────────────────────────────
 lines = ['#N canvas 50 50 1100 800 10;']
 for kind, x, y, body in objs:

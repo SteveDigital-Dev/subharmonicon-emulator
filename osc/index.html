@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Subharmonicon</title>
+<style>
+/* ── Reset & base ──────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%; height: 100%;
+  background: #1a1a1a;
+  color: #e0e0e0;
+  font-family: 'Courier New', 'Lucida Console', monospace;
+  font-size: 13px;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ── Layout shell ──────────────────────────────────────────────────────── */
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Top bar ───────────────────────────────────────────────────────────── */
+#topbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  background: #111;
+  border-bottom: 2px solid #c04040;
+  padding: 0 12px;
+  height: 44px;
+  gap: 12px;
+}
+#logo {
+  font-size: 15px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  color: #c04040;
+  text-transform: uppercase;
+}
+#conn-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #555;
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+#conn-dot.connected    { background: #40c070; }
+#conn-dot.connecting   { background: #c0a040; }
+#conn-dot.error        { background: #c04040; }
+#conn-label {
+  font-size: 11px;
+  color: #888;
+  flex-shrink: 0;
+}
+#spacer { flex: 1; }
+#ws-url-input {
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #ccc;
+  font-family: monospace;
+  font-size: 11px;
+  padding: 3px 6px;
+  width: 220px;
+}
+#reconnect-btn {
+  background: #2a2a2a;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: #ccc;
+  font-family: monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+#reconnect-btn:hover { background: #3a3a3a; }
+#reconnect-btn:active { background: #c04040; color: #fff; }
+
+/* ── Tab bar ───────────────────────────────────────────────────────────── */
+#tabbar {
+  flex: 0 0 auto;
+  display: flex;
+  background: #222;
+  border-bottom: 1px solid #333;
+}
+.tab-btn {
+  flex: 1;
+  padding: 9px 4px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #888;
+  font-family: monospace;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+}
+.tab-btn:hover  { color: #ccc; }
+.tab-btn.active { color: #e0e0e0; border-bottom-color: #c04040; }
+
+/* ── Tab content ───────────────────────────────────────────────────────── */
+#tab-content {
+  flex: 1 1 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-page { display: none; padding: 10px; }
+.tab-page.active { display: block; }
+
+/* ── Section panels ────────────────────────────────────────────────────── */
+.section {
+  background: #2a2a2a;
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  padding: 10px 12px 14px;
+  margin-bottom: 10px;
+}
+.section-title {
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #c04040;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+/* ── Grid helpers ──────────────────────────────────────────────────────── */
+.col-2  { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.col-3  { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.col-4  { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+
+/* ── Control row ───────────────────────────────────────────────────────── */
+.ctrl {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ctrl-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #999;
+}
+.ctrl-value {
+  font-size: 11px;
+  color: #c04040;
+  min-width: 52px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.ctrl-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Sliders ───────────────────────────────────────────────────────────── */
+input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+  touch-action: none;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: #444;
+  border-radius: 2px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: #c04040;
+  border: 2px solid #e06060;
+  margin-top: -9px;
+  box-shadow: 0 0 4px rgba(192,64,64,0.5);
+  transition: transform 0.1s;
+}
+input[type=range]:active::-webkit-slider-thumb { transform: scale(1.2); }
+input[type=range]::-moz-range-track {
+  height: 4px;
+  background: #444;
+  border-radius: 2px;
+}
+input[type=range]::-moz-range-thumb {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: #c04040;
+  border: 2px solid #e06060;
+  box-shadow: 0 0 4px rgba(192,64,64,0.5);
+}
+
+/* Large TEMPO slider */
+.slider-large input[type=range] { height: 38px; }
+.slider-large input[type=range]::-webkit-slider-thumb { width: 30px; height: 30px; margin-top: -13px; }
+
+/* ── Toggle / button group ─────────────────────────────────────────────── */
+.toggle-btn {
+  flex: 1;
+  padding: 8px 4px;
+  background: #333;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #999;
+  font-family: monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  touch-action: manipulation;
+}
+.toggle-btn.active {
+  background: #c04040;
+  border-color: #e06060;
+  color: #fff;
+}
+.btn-group { display: flex; gap: 4px; }
+.btn-group .toggle-btn { font-size: 10px; padding: 7px 2px; }
+
+/* route toggle 2-state */
+.route-wrap { display: flex; gap: 4px; margin-top: 2px; }
+.route-wrap .toggle-btn { font-size: 10px; }
+
+/* ── VCO sub-panel ─────────────────────────────────────────────────────── */
+.vco-panel {
+  background: #252525;
+  border: 1px solid #383838;
+  border-radius: 5px;
+  padding: 10px;
+}
+.vco-panel-title {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #c04040;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* ── Responsive: small screens ─────────────────────────────────────────── */
+@media (max-width: 540px) {
+  .col-4 { grid-template-columns: 1fr 1fr; }
+  .col-3 { grid-template-columns: 1fr 1fr; }
+  #ws-url-input { width: 130px; }
+}
+@media (max-width: 380px) {
+  .col-2 { grid-template-columns: 1fr; }
+  .col-4 { grid-template-columns: 1fr 1fr; }
+  #ws-url-input { display: none; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Top bar ── -->
+  <div id="topbar">
+    <span id="logo">Subharmonicon</span>
+    <div id="conn-dot" class="connecting"></div>
+    <span id="conn-label">connecting…</span>
+    <div id="spacer"></div>
+    <input id="ws-url-input" type="text" spellcheck="false">
+    <button id="reconnect-btn" onclick="wsConnect()">connect</button>
+  </div>
+
+  <!-- ── Tab bar ── -->
+  <div id="tabbar">
+    <button class="tab-btn active" onclick="showTab('vcos')">VCOs</button>
+    <button class="tab-btn"       onclick="showTab('suboscs')">SubOSCs</button>
+    <button class="tab-btn"       onclick="showTab('seqvcflfo')">Seq / VCF / LFO</button>
+    <button class="tab-btn"       onclick="showTab('fx')">FX</button>
+  </div>
+
+  <!-- ── Tab content ── -->
+  <div id="tab-content">
+
+    <!-- ===== VCOs ===== -->
+    <div id="page-vcos" class="tab-page active">
+      <div class="col-2">
+
+        <!-- VCO 1 -->
+        <div class="vco-panel">
+          <div class="vco-panel-title">VCO 1</div>
+
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">FREQ</span>
+              <span class="ctrl-value" id="vco1_freq_disp">440 Hz</span>
+            </div>
+            <input type="range" id="vco1_freq" min="0" max="100" value="60"
+              oninput="onLogSlider(this,'/vco1/freq',20,2000,'vco1_freq_disp')">
+          </div>
+
+          <div class="ctrl" style="margin-top:8px">
+            <span class="ctrl-label">WAVE</span>
+            <div class="btn-group" id="vco1_wave_group">
+              <button class="toggle-btn active" onclick="onWaveBtn('vco1_wave_group',0,'/vco1/wave')">SINE</button>
+              <button class="toggle-btn"        onclick="onWaveBtn('vco1_wave_group',1,'/vco1/wave')">SAW</button>
+              <button class="toggle-btn"        onclick="onWaveBtn('vco1_wave_group',2,'/vco1/wave')">TRI</button>
+              <button class="toggle-btn"        onclick="onWaveBtn('vco1_wave_group',3,'/vco1/wave')">SQ</button>
+            </div>
+          </div>
+
+          <div class="col-2" style="margin-top:8px">
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">ATK</span>
+                <span class="ctrl-value" id="vco1_atk_disp">0.01</span>
+              </div>
+              <input type="range" id="vco1_atk" min="0" max="100" value="1"
+                oninput="onLinSlider(this,'/vco1/atk',0,1,'vco1_atk_disp',2)">
+            </div>
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">DEC</span>
+                <span class="ctrl-value" id="vco1_dec_disp">0.30</span>
+              </div>
+              <input type="range" id="vco1_dec" min="0" max="100" value="30"
+                oninput="onLinSlider(this,'/vco1/dec',0,1,'vco1_dec_disp',2)">
+            </div>
+          </div>
+
+          <div class="ctrl" style="margin-top:8px">
+            <div class="ctrl-row">
+              <span class="ctrl-label">VCF CUT</span>
+              <span class="ctrl-value" id="vco1_cut_disp">2000 Hz</span>
+            </div>
+            <input type="range" id="vco1_cut" min="0" max="100" value="77"
+              oninput="onLogSlider(this,'/vco1/cut',80,8000,'vco1_cut_disp')">
+          </div>
+
+          <div class="ctrl" style="margin-top:8px">
+            <div class="ctrl-row">
+              <span class="ctrl-label">VCF RES</span>
+              <span class="ctrl-value" id="vco1_res_disp">0.0</span>
+            </div>
+            <input type="range" id="vco1_res" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/vco1/res',0,10,'vco1_res_disp',1)">
+          </div>
+
+          <div class="ctrl" style="margin-top:10px">
+            <span class="ctrl-label">ROUTE</span>
+            <div class="route-wrap">
+              <button class="toggle-btn active" id="vco1_route_seq1"
+                onclick="onRoute('vco1_route',0)">SEQ 1</button>
+              <button class="toggle-btn" id="vco1_route_seq2"
+                onclick="onRoute('vco1_route',1)">SEQ 2</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- VCO 2 -->
+        <div class="vco-panel">
+          <div class="vco-panel-title">VCO 2</div>
+
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">FREQ</span>
+              <span class="ctrl-value" id="vco2_freq_disp">220 Hz</span>
+            </div>
+            <input type="range" id="vco2_freq" min="0" max="100" value="50"
+              oninput="onLogSlider(this,'/vco2/freq',20,2000,'vco2_freq_disp')">
+          </div>
+
+          <div class="ctrl" style="margin-top:8px">
+            <span class="ctrl-label">WAVE</span>
+            <div class="btn-group" id="vco2_wave_group">
+              <button class="toggle-btn active" onclick="onWaveBtn('vco2_wave_group',0,'/vco2/wave')">SINE</button>
+              <button class="toggle-btn"        onclick="onWaveBtn('vco2_wave_group',1,'/vco2/wave')">SAW</button>
+              <button class="toggle-btn"        onclick="onWaveBtn('vco2_wave_group',2,'/vco2/wave')">TRI</button>
+              <button class="toggle-btn"        onclick="onWaveBtn('vco2_wave_group',3,'/vco2/wave')">SQ</button>
+            </div>
+          </div>
+
+          <div class="col-2" style="margin-top:8px">
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">ATK</span>
+                <span class="ctrl-value" id="vco2_atk_disp">0.01</span>
+              </div>
+              <input type="range" id="vco2_atk" min="0" max="100" value="1"
+                oninput="onLinSlider(this,'/vco2/atk',0,1,'vco2_atk_disp',2)">
+            </div>
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">DEC</span>
+                <span class="ctrl-value" id="vco2_dec_disp">0.30</span>
+              </div>
+              <input type="range" id="vco2_dec" min="0" max="100" value="30"
+                oninput="onLinSlider(this,'/vco2/dec',0,1,'vco2_dec_disp',2)">
+            </div>
+          </div>
+
+          <div class="ctrl" style="margin-top:8px">
+            <div class="ctrl-row">
+              <span class="ctrl-label">VCF CUT</span>
+              <span class="ctrl-value" id="vco2_cut_disp">2000 Hz</span>
+            </div>
+            <input type="range" id="vco2_cut" min="0" max="100" value="77"
+              oninput="onLogSlider(this,'/vco2/cut',80,8000,'vco2_cut_disp')">
+          </div>
+
+          <div class="ctrl" style="margin-top:8px">
+            <div class="ctrl-row">
+              <span class="ctrl-label">VCF RES</span>
+              <span class="ctrl-value" id="vco2_res_disp">0.0</span>
+            </div>
+            <input type="range" id="vco2_res" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/vco2/res',0,10,'vco2_res_disp',1)">
+          </div>
+
+          <div class="ctrl" style="margin-top:10px">
+            <span class="ctrl-label">ROUTE</span>
+            <div class="route-wrap">
+              <button class="toggle-btn active" id="vco2_route_seq1"
+                onclick="onRoute('vco2_route',0)">SEQ 1</button>
+              <button class="toggle-btn" id="vco2_route_seq2"
+                onclick="onRoute('vco2_route',1)">SEQ 2</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /col-2 VCOs -->
+    </div><!-- /page-vcos -->
+
+
+    <!-- ===== SubOSCs ===== -->
+    <div id="page-suboscs" class="tab-page">
+      <div class="section">
+        <div class="section-title">Sub Oscillators</div>
+        <div class="col-4">
+
+          <!-- SUB 1 -->
+          <div class="ctrl">
+            <span class="ctrl-label" style="color:#c04040">SUB 1</span>
+            <div class="ctrl-row" style="margin-top:4px">
+              <span class="ctrl-label">DIV</span>
+              <span class="ctrl-value" id="sub1_div_disp">2</span>
+            </div>
+            <input type="range" id="sub1_div" min="1" max="16" step="1" value="2"
+              oninput="onIntSlider(this,'/sub1/div','sub1_div_disp')">
+            <span class="ctrl-label" style="margin-top:8px">ROUTE</span>
+            <div class="route-wrap">
+              <button class="toggle-btn active" id="sub1_route_seq1"
+                onclick="onRoute('sub1_route',0)">S1</button>
+              <button class="toggle-btn" id="sub1_route_seq2"
+                onclick="onRoute('sub1_route',1)">S2</button>
+            </div>
+          </div>
+
+          <!-- SUB 2 -->
+          <div class="ctrl">
+            <span class="ctrl-label" style="color:#c04040">SUB 2</span>
+            <div class="ctrl-row" style="margin-top:4px">
+              <span class="ctrl-label">DIV</span>
+              <span class="ctrl-value" id="sub2_div_disp">3</span>
+            </div>
+            <input type="range" id="sub2_div" min="1" max="16" step="1" value="3"
+              oninput="onIntSlider(this,'/sub2/div','sub2_div_disp')">
+            <span class="ctrl-label" style="margin-top:8px">ROUTE</span>
+            <div class="route-wrap">
+              <button class="toggle-btn active" id="sub2_route_seq1"
+                onclick="onRoute('sub2_route',0)">S1</button>
+              <button class="toggle-btn" id="sub2_route_seq2"
+                onclick="onRoute('sub2_route',1)">S2</button>
+            </div>
+          </div>
+
+          <!-- SUB 3 -->
+          <div class="ctrl">
+            <span class="ctrl-label" style="color:#c04040">SUB 3</span>
+            <div class="ctrl-row" style="margin-top:4px">
+              <span class="ctrl-label">DIV</span>
+              <span class="ctrl-value" id="sub3_div_disp">4</span>
+            </div>
+            <input type="range" id="sub3_div" min="1" max="16" step="1" value="4"
+              oninput="onIntSlider(this,'/sub3/div','sub3_div_disp')">
+            <span class="ctrl-label" style="margin-top:8px">ROUTE</span>
+            <div class="route-wrap">
+              <button class="toggle-btn active" id="sub3_route_seq1"
+                onclick="onRoute('sub3_route',0)">S1</button>
+              <button class="toggle-btn" id="sub3_route_seq2"
+                onclick="onRoute('sub3_route',1)">S2</button>
+            </div>
+          </div>
+
+          <!-- SUB 4 -->
+          <div class="ctrl">
+            <span class="ctrl-label" style="color:#c04040">SUB 4</span>
+            <div class="ctrl-row" style="margin-top:4px">
+              <span class="ctrl-label">DIV</span>
+              <span class="ctrl-value" id="sub4_div_disp">6</span>
+            </div>
+            <input type="range" id="sub4_div" min="1" max="16" step="1" value="6"
+              oninput="onIntSlider(this,'/sub4/div','sub4_div_disp')">
+            <span class="ctrl-label" style="margin-top:8px">ROUTE</span>
+            <div class="route-wrap">
+              <button class="toggle-btn active" id="sub4_route_seq1"
+                onclick="onRoute('sub4_route',0)">S1</button>
+              <button class="toggle-btn" id="sub4_route_seq2"
+                onclick="onRoute('sub4_route',1)">S2</button>
+            </div>
+          </div>
+
+        </div><!-- /col-4 -->
+      </div><!-- /section suboscs -->
+    </div><!-- /page-suboscs -->
+
+
+    <!-- ===== Sequencer / VCF / LFO ===== -->
+    <div id="page-seqvcflfo" class="tab-page">
+
+      <!-- SEQUENCER -->
+      <div class="section">
+        <div class="section-title">Sequencer</div>
+
+        <div class="ctrl slider-large">
+          <div class="ctrl-row">
+            <span class="ctrl-label">TEMPO</span>
+            <span class="ctrl-value" id="tempo_disp">120 BPM</span>
+          </div>
+          <input type="range" id="tempo" min="30" max="240" value="120"
+            oninput="onTempoSlider(this)">
+        </div>
+
+        <div class="col-2" style="margin-top:10px">
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">SEQ1 RATE</span>
+              <span class="ctrl-value" id="seq1_rate_disp">1</span>
+            </div>
+            <input type="range" id="seq1_rate" min="1" max="8" step="1" value="1"
+              oninput="onIntSlider(this,'/seq1/rate','seq1_rate_disp')">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">SEQ2 RATE</span>
+              <span class="ctrl-value" id="seq2_rate_disp">1</span>
+            </div>
+            <input type="range" id="seq2_rate" min="1" max="8" step="1" value="1"
+              oninput="onIntSlider(this,'/seq2/rate','seq2_rate_disp')">
+          </div>
+        </div>
+      </div><!-- /section seq -->
+
+      <!-- VCF -->
+      <div class="section">
+        <div class="section-title">VCF</div>
+        <div class="col-2">
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">CUTOFF</span>
+              <span class="ctrl-value" id="vcf_cut_disp">800 Hz</span>
+            </div>
+            <input type="range" id="vcf_cutoff" min="0" max="100" value="57"
+              oninput="onLogSlider(this,'/vcf/cutoff',20,2000,'vcf_cut_disp')">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">RESO</span>
+              <span class="ctrl-value" id="vcf_res_disp">0.0</span>
+            </div>
+            <input type="range" id="vcf_res" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/vcf/res',0,10,'vcf_res_disp',1)">
+          </div>
+        </div>
+      </div><!-- /section vcf -->
+
+      <!-- LFO -->
+      <div class="section">
+        <div class="section-title">LFO</div>
+        <div class="col-2">
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">RATE</span>
+              <span class="ctrl-value" id="lfo_rate_disp">1.0</span>
+            </div>
+            <input type="range" id="lfo_rate" min="0" max="100" value="10"
+              oninput="onLinSlider(this,'/lfo/rate',0,10,'lfo_rate_disp',1)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">AMOUNT</span>
+              <span class="ctrl-value" id="lfo_amt_disp">0</span>
+            </div>
+            <input type="range" id="lfo_amount" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/lfo/amount',0,200,'lfo_amt_disp',0)">
+          </div>
+        </div>
+      </div><!-- /section lfo -->
+
+    </div><!-- /page-seqvcflfo -->
+
+
+    <!-- ===== FX ===== -->
+    <div id="page-fx" class="tab-page">
+
+      <!-- DRIVE -->
+      <div class="section">
+        <div class="section-title">Drive</div>
+        <div class="ctrl">
+          <div class="ctrl-row">
+            <span class="ctrl-label">DRIVE</span>
+            <span class="ctrl-value" id="fx_drive_disp">0.00</span>
+          </div>
+          <input type="range" id="fx_drive" min="0" max="100" value="0"
+            oninput="onLinSlider(this,'/fx/drive',0,1,'fx_drive_disp',2)">
+        </div>
+      </div>
+
+      <!-- CHORUS -->
+      <div class="section">
+        <div class="section-title">Chorus</div>
+        <div class="col-3">
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">RATE</span>
+              <span class="ctrl-value" id="fx_chr_disp">1.0</span>
+            </div>
+            <input type="range" id="fx_cho_rate" min="0" max="100" value="20"
+              oninput="onLinSlider(this,'/fx/cho_rate',0,5,'fx_chr_disp',1)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">DEPTH</span>
+              <span class="ctrl-value" id="fx_chd_disp">5</span>
+            </div>
+            <input type="range" id="fx_cho_depth" min="0" max="100" value="25"
+              oninput="onLinSlider(this,'/fx/cho_depth',0,20,'fx_chd_disp',0)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">MIX</span>
+              <span class="ctrl-value" id="fx_chm_disp">0.00</span>
+            </div>
+            <input type="range" id="fx_cho_mix" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/fx/cho_mix',0,1,'fx_chm_disp',2)">
+          </div>
+        </div>
+      </div>
+
+      <!-- DELAY -->
+      <div class="section">
+        <div class="section-title">Delay</div>
+        <div class="col-3">
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">TIME</span>
+              <span class="ctrl-value" id="fx_dt_disp">0.25</span>
+            </div>
+            <input type="range" id="fx_dly_time" min="0" max="100" value="25"
+              oninput="onLinSlider(this,'/fx/dly_time',0,1,'fx_dt_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">FDBK</span>
+              <span class="ctrl-value" id="fx_df_disp">0.30</span>
+            </div>
+            <input type="range" id="fx_dly_fdbk" min="0" max="100" value="32"
+              oninput="onLinSlider(this,'/fx/dly_fdbk',0,0.95,'fx_df_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">MIX</span>
+              <span class="ctrl-value" id="fx_dm_disp">0.00</span>
+            </div>
+            <input type="range" id="fx_dly_mix" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/fx/dly_mix',0,1,'fx_dm_disp',2)">
+          </div>
+        </div>
+      </div>
+
+      <!-- REVERB -->
+      <div class="section">
+        <div class="section-title">Reverb</div>
+        <div class="col-2">
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">SIZE</span>
+              <span class="ctrl-value" id="fx_rs_disp">0.50</span>
+            </div>
+            <input type="range" id="fx_rvb_size" min="0" max="100" value="50"
+              oninput="onLinSlider(this,'/fx/rvb_size',0,1,'fx_rs_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">MIX</span>
+              <span class="ctrl-value" id="fx_rm_disp">0.00</span>
+            </div>
+            <input type="range" id="fx_rvb_mix" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/fx/rvb_mix',0,1,'fx_rm_disp',2)">
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /page-fx -->
+
+  </div><!-- /tab-content -->
+</div><!-- /app -->
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════════
+   WebSocket connection
+══════════════════════════════════════════════════════════════════════════ */
+var ws = null;
+var wsUrl = '';
+var reconnectTimer = null;
+var reconnectDelay = 2000;
+
+function defaultWsUrl() {
+  return 'ws://' + location.hostname + ':8080';
+}
+
+function wsConnect() {
+  if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+  if (ws) {
+    try { ws.close(); } catch(e) {}
+    ws = null;
+  }
+  var urlInput = document.getElementById('ws-url-input');
+  wsUrl = (urlInput.value.trim() || defaultWsUrl());
+  urlInput.value = wsUrl;
+  setConnStatus('connecting', 'connecting…');
+  try {
+    ws = new WebSocket(wsUrl);
+    ws.onopen = function() {
+      setConnStatus('connected', 'connected');
+      reconnectDelay = 2000;
+    };
+    ws.onclose = function(ev) {
+      ws = null;
+      setConnStatus('error', 'disconnected');
+      scheduleReconnect();
+    };
+    ws.onerror = function() {
+      // onclose fires after onerror; just update label
+      setConnStatus('error', 'error');
+    };
+    ws.onmessage = function(ev) {
+      // Server might echo; ignore for now
+    };
+  } catch(ex) {
+    setConnStatus('error', 'bad url');
+  }
+}
+
+function scheduleReconnect() {
+  if (reconnectTimer) return;
+  setConnStatus('connecting', 'retry in ' + (reconnectDelay/1000).toFixed(0) + 's…');
+  reconnectTimer = setTimeout(function() {
+    reconnectTimer = null;
+    wsConnect();
+  }, reconnectDelay);
+  reconnectDelay = Math.min(reconnectDelay * 1.5, 30000);
+}
+
+function setConnStatus(cls, label) {
+  var dot = document.getElementById('conn-dot');
+  var lbl = document.getElementById('conn-label');
+  dot.className = cls;
+  lbl.textContent = label;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Rate-limited send (~30 Hz cap per address)
+══════════════════════════════════════════════════════════════════════════ */
+var pendingSends = {};      // addr → {value, scheduled}
+var SEND_INTERVAL = 33;    // ms
+
+function send(addr, value) {
+  if (!pendingSends[addr]) {
+    pendingSends[addr] = { value: value, scheduled: false };
+  } else {
+    pendingSends[addr].value = value;
+  }
+  if (!pendingSends[addr].scheduled) {
+    pendingSends[addr].scheduled = true;
+    setTimeout(function() {
+      var entry = pendingSends[addr];
+      if (!entry) return;
+      entry.scheduled = false;
+      doSend(addr, entry.value);
+    }, SEND_INTERVAL);
+  }
+}
+
+function doSend(addr, value) {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  try {
+    ws.send(JSON.stringify({ addr: addr, value: value }));
+  } catch(e) {}
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Control helpers
+══════════════════════════════════════════════════════════════════════════ */
+
+/* Log-scale slider: input 0-100 → Hz */
+function logHz(t, minHz, maxHz) {
+  return minHz * Math.pow(maxHz / minHz, t / 100);
+}
+function onLogSlider(el, addr, minHz, maxHz, dispId) {
+  var hz = logHz(parseFloat(el.value), minHz, maxHz);
+  var rounded = Math.round(hz);
+  document.getElementById(dispId).textContent = rounded + ' Hz';
+  send(addr, rounded);
+}
+
+/* Linear slider: maps 0-100 range to [min, max] */
+function onLinSlider(el, addr, min, max, dispId, decimals) {
+  var v = min + (parseFloat(el.value) / 100) * (max - min);
+  document.getElementById(dispId).textContent = v.toFixed(decimals);
+  send(addr, parseFloat(v.toFixed(decimals)));
+}
+
+/* Integer step slider (already has step=1 in HTML) */
+function onIntSlider(el, addr, dispId) {
+  var v = Math.round(parseFloat(el.value));
+  document.getElementById(dispId).textContent = v;
+  send(addr, v);
+}
+
+/* TEMPO slider: direct BPM value */
+function onTempoSlider(el) {
+  var v = Math.round(parseFloat(el.value));
+  document.getElementById('tempo_disp').textContent = v + ' BPM';
+  send('/tempo', v);
+}
+
+/* WAVE button group (0-3) */
+function onWaveBtn(groupId, idx, addr) {
+  var btns = document.getElementById(groupId).querySelectorAll('.toggle-btn');
+  btns.forEach(function(b, i) {
+    b.classList.toggle('active', i === idx);
+  });
+  send(addr, idx);
+}
+
+/* ROUTE toggle: btn1 = SEQ1 (val 0), btn2 = SEQ2 (val 1) */
+function onRoute(prefix, val) {
+  var btn1 = document.getElementById(prefix + '_seq1');
+  var btn2 = document.getElementById(prefix + '_seq2');
+  if (val === 0) {
+    btn1.classList.add('active');
+    btn2.classList.remove('active');
+  } else {
+    btn1.classList.remove('active');
+    btn2.classList.add('active');
+  }
+  // derive OSC address from prefix
+  // prefix patterns: vco1_route → /vco1/route
+  //                  sub1_route → /sub1/route
+  var addr = '/' + prefix.replace('_route', '/route').replace('_', '/');
+  // handle sub addresses: sub1_route → /sub1/route (already correct)
+  // but vco1 → /vco1/route  and  the replace above gives /vco1/route ✓
+  send(addr, val);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Touch pass-through for range inputs (cross-browser)
+══════════════════════════════════════════════════════════════════════════ */
+(function patchTouchSliders() {
+  function getSliderVal(el, clientX) {
+    var rect = el.getBoundingClientRect();
+    var ratio = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    var min = parseFloat(el.min) || 0;
+    var max = parseFloat(el.max) || 100;
+    var step = parseFloat(el.step) || 0;
+    var val = min + ratio * (max - min);
+    if (step > 0) val = Math.round(val / step) * step;
+    return Math.max(min, Math.min(max, val));
+  }
+  document.addEventListener('touchstart', function(e) {
+    var el = e.target;
+    if (el.tagName !== 'INPUT' || el.type !== 'range') return;
+    e.preventDefault();
+    el.value = getSliderVal(el, e.touches[0].clientX);
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }, { passive: false });
+  document.addEventListener('touchmove', function(e) {
+    var el = e.target;
+    if (el.tagName !== 'INPUT' || el.type !== 'range') return;
+    e.preventDefault();
+    el.value = getSliderVal(el, e.touches[0].clientX);
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }, { passive: false });
+})();
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Tab navigation
+══════════════════════════════════════════════════════════════════════════ */
+var TAB_PAGES = {
+  'vcos':      'page-vcos',
+  'suboscs':   'page-suboscs',
+  'seqvcflfo': 'page-seqvcflfo',
+  'fx':        'page-fx',
+};
+
+function showTab(name) {
+  // pages
+  Object.keys(TAB_PAGES).forEach(function(k) {
+    var pg = document.getElementById(TAB_PAGES[k]);
+    if (pg) pg.classList.toggle('active', k === name);
+  });
+  // buttons
+  var btns = document.querySelectorAll('.tab-btn');
+  btns.forEach(function(btn) {
+    // match by onclick attribute value
+    var onclick = btn.getAttribute('onclick') || '';
+    btn.classList.toggle('active', onclick.indexOf("'" + name + "'") !== -1);
+  });
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   Init display values on load
+══════════════════════════════════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', function() {
+  // Set WS URL input placeholder
+  var urlInput = document.getElementById('ws-url-input');
+  urlInput.value = defaultWsUrl();
+
+  // Sync all display values from initial slider positions
+  // VCO1
+  document.getElementById('vco1_freq').dispatchEvent(new Event('input'));
+  document.getElementById('vco1_atk').dispatchEvent(new Event('input'));
+  document.getElementById('vco1_dec').dispatchEvent(new Event('input'));
+  document.getElementById('vco1_cut').dispatchEvent(new Event('input'));
+  document.getElementById('vco1_res').dispatchEvent(new Event('input'));
+  // VCO2
+  document.getElementById('vco2_freq').dispatchEvent(new Event('input'));
+  document.getElementById('vco2_atk').dispatchEvent(new Event('input'));
+  document.getElementById('vco2_dec').dispatchEvent(new Event('input'));
+  document.getElementById('vco2_cut').dispatchEvent(new Event('input'));
+  document.getElementById('vco2_res').dispatchEvent(new Event('input'));
+  // SubOSCs
+  document.getElementById('sub1_div').dispatchEvent(new Event('input'));
+  document.getElementById('sub2_div').dispatchEvent(new Event('input'));
+  document.getElementById('sub3_div').dispatchEvent(new Event('input'));
+  document.getElementById('sub4_div').dispatchEvent(new Event('input'));
+  // Seq / VCF / LFO
+  document.getElementById('tempo').dispatchEvent(new Event('input'));
+  document.getElementById('seq1_rate').dispatchEvent(new Event('input'));
+  document.getElementById('seq2_rate').dispatchEvent(new Event('input'));
+  document.getElementById('vcf_cutoff').dispatchEvent(new Event('input'));
+  document.getElementById('vcf_res').dispatchEvent(new Event('input'));
+  document.getElementById('lfo_rate').dispatchEvent(new Event('input'));
+  document.getElementById('lfo_amount').dispatchEvent(new Event('input'));
+  // FX
+  document.getElementById('fx_drive').dispatchEvent(new Event('input'));
+  document.getElementById('fx_cho_rate').dispatchEvent(new Event('input'));
+  document.getElementById('fx_cho_depth').dispatchEvent(new Event('input'));
+  document.getElementById('fx_cho_mix').dispatchEvent(new Event('input'));
+  document.getElementById('fx_dly_time').dispatchEvent(new Event('input'));
+  document.getElementById('fx_dly_fdbk').dispatchEvent(new Event('input'));
+  document.getElementById('fx_dly_mix').dispatchEvent(new Event('input'));
+  document.getElementById('fx_rvb_size').dispatchEvent(new Event('input'));
+  document.getElementById('fx_rvb_mix').dispatchEvent(new Event('input'));
+
+  // Connect WebSocket
+  wsConnect();
+});
+</script>
+</body>
+</html>
