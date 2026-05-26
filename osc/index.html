@@ -254,6 +254,24 @@ input[type=range]::-moz-range-thumb {
   margin-bottom: 8px;
 }
 
+/* ── FX sub-panel (compact, 3 per page) ───────────────────────────────── */
+.fx-panel {
+  background: #252525;
+  border: 1px solid #383838;
+  border-radius: 5px;
+  padding: 8px 10px 12px;
+  margin-bottom: 10px;
+}
+.fx-panel-title {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #c04040;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #383838;
+}
+
 /* ── Responsive: small screens ─────────────────────────────────────────── */
 @media (max-width: 540px) {
   .col-4 { grid-template-columns: 1fr 1fr; }
@@ -284,7 +302,7 @@ input[type=range]::-moz-range-thumb {
   <div id="tabbar">
     <button class="tab-btn active" onclick="showTab('vcos')">VCOs</button>
     <button class="tab-btn"       onclick="showTab('suboscs')">SubOSCs</button>
-    <button class="tab-btn"       onclick="showTab('seqvcflfo')">Seq / VCF / LFO</button>
+    <button class="tab-btn"       onclick="showTab('seqvcflfo')">Seq / Voices</button>
     <button class="tab-btn"       onclick="showTab('fx')">FX</button>
   </div>
 
@@ -524,7 +542,7 @@ input[type=range]::-moz-range-thumb {
     </div><!-- /page-suboscs -->
 
 
-    <!-- ===== Sequencer / VCF / LFO ===== -->
+    <!-- ===== Sequencer / Voices / LFO ===== -->
     <div id="page-seqvcflfo" class="tab-page">
 
       <!-- SEQUENCER -->
@@ -540,48 +558,151 @@ input[type=range]::-moz-range-thumb {
             oninput="onTempoSlider(this)">
         </div>
 
-        <div class="col-2" style="margin-top:10px">
-          <div class="ctrl">
-            <div class="ctrl-row">
-              <span class="ctrl-label">SEQ1 RATE</span>
-              <span class="ctrl-value" id="seq1_rate_disp">1</span>
+        <!-- SEQ 1 -->
+        <div style="margin-top:12px; padding-top:10px; border-top:1px solid #3a3a3a;">
+          <div class="ctrl-label" style="color:#c04040; margin-bottom:8px;">SEQ 1</div>
+          <div class="col-4">
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">RATE</span>
+                <span class="ctrl-value" id="seq1_rate_disp">1</span>
+              </div>
+              <input type="range" id="seq1_rate" min="1" max="8" step="1" value="1"
+                oninput="onIntSlider(this,'/seq1/rate','seq1_rate_disp')">
             </div>
-            <input type="range" id="seq1_rate" min="1" max="8" step="1" value="1"
-              oninput="onIntSlider(this,'/seq1/rate','seq1_rate_disp')">
-          </div>
-          <div class="ctrl">
-            <div class="ctrl-row">
-              <span class="ctrl-label">SEQ2 RATE</span>
-              <span class="ctrl-value" id="seq2_rate_disp">1</span>
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">LENGTH</span>
+                <span class="ctrl-value" id="seq1_len_disp">16</span>
+              </div>
+              <input type="range" id="seq1_length" min="1" max="16" step="1" value="16"
+                oninput="onIntSlider(this,'/seq1/length','seq1_len_disp')">
             </div>
-            <input type="range" id="seq2_rate" min="1" max="8" step="1" value="1"
-              oninput="onIntSlider(this,'/seq2/rate','seq2_rate_disp')">
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">SWING</span>
+                <span class="ctrl-value" id="seq1_swing_disp">0</span>
+              </div>
+              <input type="range" id="seq1_swing" min="0" max="100" step="1" value="0"
+                oninput="onIntSlider(this,'/seq1/swing','seq1_swing_disp')">
+            </div>
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">EUCLID</span>
+                <span class="ctrl-value" id="seq1_euclid_disp">0</span>
+              </div>
+              <input type="range" id="seq1_euclid" min="0" max="16" step="1" value="0"
+                oninput="onIntSlider(this,'/seq1/euclid','seq1_euclid_disp')">
+            </div>
           </div>
         </div>
+
+        <!-- SEQ 2 -->
+        <div style="margin-top:12px; padding-top:10px; border-top:1px solid #3a3a3a;">
+          <div class="ctrl-label" style="color:#c04040; margin-bottom:8px;">SEQ 2</div>
+          <div class="col-4">
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">RATE</span>
+                <span class="ctrl-value" id="seq2_rate_disp">1</span>
+              </div>
+              <input type="range" id="seq2_rate" min="1" max="8" step="1" value="1"
+                oninput="onIntSlider(this,'/seq2/rate','seq2_rate_disp')">
+            </div>
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">LENGTH</span>
+                <span class="ctrl-value" id="seq2_len_disp">16</span>
+              </div>
+              <input type="range" id="seq2_length" min="1" max="16" step="1" value="16"
+                oninput="onIntSlider(this,'/seq2/length','seq2_len_disp')">
+            </div>
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">SWING</span>
+                <span class="ctrl-value" id="seq2_swing_disp">0</span>
+              </div>
+              <input type="range" id="seq2_swing" min="0" max="100" step="1" value="0"
+                oninput="onIntSlider(this,'/seq2/swing','seq2_swing_disp')">
+            </div>
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">EUCLID</span>
+                <span class="ctrl-value" id="seq2_euclid_disp">0</span>
+              </div>
+              <input type="range" id="seq2_euclid" min="0" max="16" step="1" value="0"
+                oninput="onIntSlider(this,'/seq2/euclid','seq2_euclid_disp')">
+            </div>
+          </div>
+        </div>
+
       </div><!-- /section seq -->
 
-      <!-- VCF -->
+      <!-- VOICES -->
       <div class="section">
-        <div class="section-title">VCF</div>
+        <div class="section-title">Voices</div>
         <div class="col-2">
-          <div class="ctrl">
-            <div class="ctrl-row">
-              <span class="ctrl-label">CUTOFF</span>
-              <span class="ctrl-value" id="vcf_cut_disp">800 Hz</span>
+
+          <!-- Voice 1 -->
+          <div>
+            <div class="ctrl-label" style="color:#c04040; margin-bottom:8px;">VOICE 1</div>
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">CUTOFF</span>
+                <span class="ctrl-value" id="v1_cut_disp">800 Hz</span>
+              </div>
+              <input type="range" id="v1_cutoff" min="0" max="100" value="57"
+                oninput="onLogSlider(this,'/v1/cutoff',20,8000,'v1_cut_disp')">
             </div>
-            <input type="range" id="vcf_cutoff" min="0" max="100" value="57"
-              oninput="onLogSlider(this,'/vcf/cutoff',20,2000,'vcf_cut_disp')">
-          </div>
-          <div class="ctrl">
-            <div class="ctrl-row">
-              <span class="ctrl-label">RESO</span>
-              <span class="ctrl-value" id="vcf_res_disp">0.0</span>
+            <div class="ctrl" style="margin-top:6px">
+              <div class="ctrl-row">
+                <span class="ctrl-label">RESO</span>
+                <span class="ctrl-value" id="v1_reso_disp">0.0</span>
+              </div>
+              <input type="range" id="v1_res" min="0" max="100" value="0"
+                oninput="onLinSlider(this,'/v1/res',0,10,'v1_reso_disp',1)">
             </div>
-            <input type="range" id="vcf_res" min="0" max="100" value="0"
-              oninput="onLinSlider(this,'/vcf/res',0,10,'vcf_res_disp',1)">
+            <div class="ctrl" style="margin-top:6px">
+              <div class="ctrl-row">
+                <span class="ctrl-label">LEVEL</span>
+                <span class="ctrl-value" id="v1_level_disp">1.00</span>
+              </div>
+              <input type="range" id="v1_level" min="0" max="100" value="100"
+                oninput="onLinSlider(this,'/v1/level',0,1,'v1_level_disp',2)">
+            </div>
           </div>
-        </div>
-      </div><!-- /section vcf -->
+
+          <!-- Voice 2 -->
+          <div>
+            <div class="ctrl-label" style="color:#c04040; margin-bottom:8px;">VOICE 2</div>
+            <div class="ctrl">
+              <div class="ctrl-row">
+                <span class="ctrl-label">CUTOFF</span>
+                <span class="ctrl-value" id="v2_cut_disp">800 Hz</span>
+              </div>
+              <input type="range" id="v2_cutoff" min="0" max="100" value="57"
+                oninput="onLogSlider(this,'/v2/cutoff',20,8000,'v2_cut_disp')">
+            </div>
+            <div class="ctrl" style="margin-top:6px">
+              <div class="ctrl-row">
+                <span class="ctrl-label">RESO</span>
+                <span class="ctrl-value" id="v2_reso_disp">0.0</span>
+              </div>
+              <input type="range" id="v2_res" min="0" max="100" value="0"
+                oninput="onLinSlider(this,'/v2/res',0,10,'v2_reso_disp',1)">
+            </div>
+            <div class="ctrl" style="margin-top:6px">
+              <div class="ctrl-row">
+                <span class="ctrl-label">LEVEL</span>
+                <span class="ctrl-value" id="v2_level_disp">1.00</span>
+              </div>
+              <input type="range" id="v2_level" min="0" max="100" value="100"
+                oninput="onLinSlider(this,'/v2/level',0,1,'v2_level_disp',2)">
+            </div>
+          </div>
+
+        </div><!-- /col-2 voices -->
+      </div><!-- /section voices -->
 
       <!-- LFO -->
       <div class="section">
@@ -612,103 +733,248 @@ input[type=range]::-moz-range-thumb {
     <!-- ===== FX ===== -->
     <div id="page-fx" class="tab-page">
 
-      <!-- DRIVE -->
-      <div class="section">
-        <div class="section-title">Drive</div>
-        <div class="ctrl">
+      <!-- VOICE 1 FX -->
+      <div class="fx-panel">
+        <div class="fx-panel-title">Voice 1 FX</div>
+        <div class="col-4" style="margin-bottom:8px">
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">DRIVE</span>
+              <span class="ctrl-value" id="v1fx_drv_disp">0.00</span>
+            </div>
+            <input type="range" id="v1fx_drive" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/v1fx/drive',0,1,'v1fx_drv_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">CHO RATE</span>
+              <span class="ctrl-value" id="v1fx_chr_disp">1.0</span>
+            </div>
+            <input type="range" id="v1fx_cho_rate" min="0" max="100" value="20"
+              oninput="onLinSlider(this,'/v1fx/cho_rate',0,5,'v1fx_chr_disp',1)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">CHO DEPT</span>
+              <span class="ctrl-value" id="v1fx_chd_disp">5</span>
+            </div>
+            <input type="range" id="v1fx_cho_depth" min="0" max="100" value="25"
+              oninput="onLinSlider(this,'/v1fx/cho_depth',0,20,'v1fx_chd_disp',0)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">CHO MIX</span>
+              <span class="ctrl-value" id="v1fx_chm_disp">0.00</span>
+            </div>
+            <input type="range" id="v1fx_cho_mix" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/v1fx/cho_mix',0,1,'v1fx_chm_disp',2)">
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">DLY TIME</span>
+              <span class="ctrl-value" id="v1fx_dt_disp">0.25</span>
+            </div>
+            <input type="range" id="v1fx_dly_time" min="0" max="100" value="25"
+              oninput="onLinSlider(this,'/v1fx/dly_time',0,1,'v1fx_dt_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">DLY FDBK</span>
+              <span class="ctrl-value" id="v1fx_df_disp">0.30</span>
+            </div>
+            <input type="range" id="v1fx_dly_fdbk" min="0" max="100" value="32"
+              oninput="onLinSlider(this,'/v1fx/dly_fdbk',0,0.95,'v1fx_df_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">DLY MIX</span>
+              <span class="ctrl-value" id="v1fx_dm_disp">0.00</span>
+            </div>
+            <input type="range" id="v1fx_dly_mix" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/v1fx/dly_mix',0,1,'v1fx_dm_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">RVB SIZE</span>
+              <span class="ctrl-value" id="v1fx_rs_disp">0.50</span>
+            </div>
+            <input type="range" id="v1fx_rvb_size" min="0" max="100" value="50"
+              oninput="onLinSlider(this,'/v1fx/rvb_size',0,1,'v1fx_rs_disp',2)">
+          </div>
+        </div>
+        <div class="ctrl" style="margin-top:8px">
           <div class="ctrl-row">
-            <span class="ctrl-label">DRIVE</span>
-            <span class="ctrl-value" id="fx_drive_disp">0.00</span>
+            <span class="ctrl-label">RVB MIX</span>
+            <span class="ctrl-value" id="v1fx_rm_disp">0.00</span>
           </div>
-          <input type="range" id="fx_drive" min="0" max="100" value="0"
-            oninput="onLinSlider(this,'/fx/drive',0,1,'fx_drive_disp',2)">
+          <input type="range" id="v1fx_rvb_mix" min="0" max="100" value="0"
+            oninput="onLinSlider(this,'/v1fx/rvb_mix',0,1,'v1fx_rm_disp',2)">
         </div>
-      </div>
+      </div><!-- /v1 fx panel -->
 
-      <!-- CHORUS -->
-      <div class="section">
-        <div class="section-title">Chorus</div>
-        <div class="col-3">
+      <!-- VOICE 2 FX -->
+      <div class="fx-panel">
+        <div class="fx-panel-title">Voice 2 FX</div>
+        <div class="col-4" style="margin-bottom:8px">
           <div class="ctrl">
             <div class="ctrl-row">
-              <span class="ctrl-label">RATE</span>
-              <span class="ctrl-value" id="fx_chr_disp">1.0</span>
+              <span class="ctrl-label">DRIVE</span>
+              <span class="ctrl-value" id="v2fx_drv_disp">0.00</span>
             </div>
-            <input type="range" id="fx_cho_rate" min="0" max="100" value="20"
-              oninput="onLinSlider(this,'/fx/cho_rate',0,5,'fx_chr_disp',1)">
+            <input type="range" id="v2fx_drive" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/v2fx/drive',0,1,'v2fx_drv_disp',2)">
           </div>
           <div class="ctrl">
             <div class="ctrl-row">
-              <span class="ctrl-label">DEPTH</span>
-              <span class="ctrl-value" id="fx_chd_disp">5</span>
+              <span class="ctrl-label">CHO RATE</span>
+              <span class="ctrl-value" id="v2fx_chr_disp">1.0</span>
             </div>
-            <input type="range" id="fx_cho_depth" min="0" max="100" value="25"
-              oninput="onLinSlider(this,'/fx/cho_depth',0,20,'fx_chd_disp',0)">
+            <input type="range" id="v2fx_cho_rate" min="0" max="100" value="20"
+              oninput="onLinSlider(this,'/v2fx/cho_rate',0,5,'v2fx_chr_disp',1)">
           </div>
           <div class="ctrl">
             <div class="ctrl-row">
-              <span class="ctrl-label">MIX</span>
-              <span class="ctrl-value" id="fx_chm_disp">0.00</span>
+              <span class="ctrl-label">CHO DEPT</span>
+              <span class="ctrl-value" id="v2fx_chd_disp">5</span>
             </div>
-            <input type="range" id="fx_cho_mix" min="0" max="100" value="0"
-              oninput="onLinSlider(this,'/fx/cho_mix',0,1,'fx_chm_disp',2)">
+            <input type="range" id="v2fx_cho_depth" min="0" max="100" value="25"
+              oninput="onLinSlider(this,'/v2fx/cho_depth',0,20,'v2fx_chd_disp',0)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">CHO MIX</span>
+              <span class="ctrl-value" id="v2fx_chm_disp">0.00</span>
+            </div>
+            <input type="range" id="v2fx_cho_mix" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/v2fx/cho_mix',0,1,'v2fx_chm_disp',2)">
           </div>
         </div>
-      </div>
+        <div class="col-4">
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">DLY TIME</span>
+              <span class="ctrl-value" id="v2fx_dt_disp">0.25</span>
+            </div>
+            <input type="range" id="v2fx_dly_time" min="0" max="100" value="25"
+              oninput="onLinSlider(this,'/v2fx/dly_time',0,1,'v2fx_dt_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">DLY FDBK</span>
+              <span class="ctrl-value" id="v2fx_df_disp">0.30</span>
+            </div>
+            <input type="range" id="v2fx_dly_fdbk" min="0" max="100" value="32"
+              oninput="onLinSlider(this,'/v2fx/dly_fdbk',0,0.95,'v2fx_df_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">DLY MIX</span>
+              <span class="ctrl-value" id="v2fx_dm_disp">0.00</span>
+            </div>
+            <input type="range" id="v2fx_dly_mix" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/v2fx/dly_mix',0,1,'v2fx_dm_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">RVB SIZE</span>
+              <span class="ctrl-value" id="v2fx_rs_disp">0.50</span>
+            </div>
+            <input type="range" id="v2fx_rvb_size" min="0" max="100" value="50"
+              oninput="onLinSlider(this,'/v2fx/rvb_size',0,1,'v2fx_rs_disp',2)">
+          </div>
+        </div>
+        <div class="ctrl" style="margin-top:8px">
+          <div class="ctrl-row">
+            <span class="ctrl-label">RVB MIX</span>
+            <span class="ctrl-value" id="v2fx_rm_disp">0.00</span>
+          </div>
+          <input type="range" id="v2fx_rvb_mix" min="0" max="100" value="0"
+            oninput="onLinSlider(this,'/v2fx/rvb_mix',0,1,'v2fx_rm_disp',2)">
+        </div>
+      </div><!-- /v2 fx panel -->
 
-      <!-- DELAY -->
-      <div class="section">
-        <div class="section-title">Delay</div>
-        <div class="col-3">
+      <!-- MASTER FX -->
+      <div class="fx-panel">
+        <div class="fx-panel-title">Master FX</div>
+        <div class="col-4" style="margin-bottom:8px">
           <div class="ctrl">
             <div class="ctrl-row">
-              <span class="ctrl-label">TIME</span>
-              <span class="ctrl-value" id="fx_dt_disp">0.25</span>
+              <span class="ctrl-label">DRIVE</span>
+              <span class="ctrl-value" id="mfx_drv_disp">0.00</span>
             </div>
-            <input type="range" id="fx_dly_time" min="0" max="100" value="25"
-              oninput="onLinSlider(this,'/fx/dly_time',0,1,'fx_dt_disp',2)">
+            <input type="range" id="mfx_drive" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/mfx/drive',0,1,'mfx_drv_disp',2)">
           </div>
           <div class="ctrl">
             <div class="ctrl-row">
-              <span class="ctrl-label">FDBK</span>
-              <span class="ctrl-value" id="fx_df_disp">0.30</span>
+              <span class="ctrl-label">CHO RATE</span>
+              <span class="ctrl-value" id="mfx_chr_disp">1.0</span>
             </div>
-            <input type="range" id="fx_dly_fdbk" min="0" max="100" value="32"
-              oninput="onLinSlider(this,'/fx/dly_fdbk',0,0.95,'fx_df_disp',2)">
+            <input type="range" id="mfx_cho_rate" min="0" max="100" value="20"
+              oninput="onLinSlider(this,'/mfx/cho_rate',0,5,'mfx_chr_disp',1)">
           </div>
           <div class="ctrl">
             <div class="ctrl-row">
-              <span class="ctrl-label">MIX</span>
-              <span class="ctrl-value" id="fx_dm_disp">0.00</span>
+              <span class="ctrl-label">CHO DEPT</span>
+              <span class="ctrl-value" id="mfx_chd_disp">5</span>
             </div>
-            <input type="range" id="fx_dly_mix" min="0" max="100" value="0"
-              oninput="onLinSlider(this,'/fx/dly_mix',0,1,'fx_dm_disp',2)">
-          </div>
-        </div>
-      </div>
-
-      <!-- REVERB -->
-      <div class="section">
-        <div class="section-title">Reverb</div>
-        <div class="col-2">
-          <div class="ctrl">
-            <div class="ctrl-row">
-              <span class="ctrl-label">SIZE</span>
-              <span class="ctrl-value" id="fx_rs_disp">0.50</span>
-            </div>
-            <input type="range" id="fx_rvb_size" min="0" max="100" value="50"
-              oninput="onLinSlider(this,'/fx/rvb_size',0,1,'fx_rs_disp',2)">
+            <input type="range" id="mfx_cho_depth" min="0" max="100" value="25"
+              oninput="onLinSlider(this,'/mfx/cho_depth',0,20,'mfx_chd_disp',0)">
           </div>
           <div class="ctrl">
             <div class="ctrl-row">
-              <span class="ctrl-label">MIX</span>
-              <span class="ctrl-value" id="fx_rm_disp">0.00</span>
+              <span class="ctrl-label">CHO MIX</span>
+              <span class="ctrl-value" id="mfx_chm_disp">0.00</span>
             </div>
-            <input type="range" id="fx_rvb_mix" min="0" max="100" value="0"
-              oninput="onLinSlider(this,'/fx/rvb_mix',0,1,'fx_rm_disp',2)">
+            <input type="range" id="mfx_cho_mix" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/mfx/cho_mix',0,1,'mfx_chm_disp',2)">
           </div>
         </div>
-      </div>
+        <div class="col-4">
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">DLY TIME</span>
+              <span class="ctrl-value" id="mfx_dt_disp">0.25</span>
+            </div>
+            <input type="range" id="mfx_dly_time" min="0" max="100" value="25"
+              oninput="onLinSlider(this,'/mfx/dly_time',0,1,'mfx_dt_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">DLY FDBK</span>
+              <span class="ctrl-value" id="mfx_df_disp">0.30</span>
+            </div>
+            <input type="range" id="mfx_dly_fdbk" min="0" max="100" value="32"
+              oninput="onLinSlider(this,'/mfx/dly_fdbk',0,0.95,'mfx_df_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">DLY MIX</span>
+              <span class="ctrl-value" id="mfx_dm_disp">0.00</span>
+            </div>
+            <input type="range" id="mfx_dly_mix" min="0" max="100" value="0"
+              oninput="onLinSlider(this,'/mfx/dly_mix',0,1,'mfx_dm_disp',2)">
+          </div>
+          <div class="ctrl">
+            <div class="ctrl-row">
+              <span class="ctrl-label">RVB SIZE</span>
+              <span class="ctrl-value" id="mfx_rs_disp">0.50</span>
+            </div>
+            <input type="range" id="mfx_rvb_size" min="0" max="100" value="50"
+              oninput="onLinSlider(this,'/mfx/rvb_size',0,1,'mfx_rs_disp',2)">
+          </div>
+        </div>
+        <div class="ctrl" style="margin-top:8px">
+          <div class="ctrl-row">
+            <span class="ctrl-label">RVB MIX</span>
+            <span class="ctrl-value" id="mfx_rm_disp">0.00</span>
+          </div>
+          <input type="range" id="mfx_rvb_mix" min="0" max="100" value="0"
+            oninput="onLinSlider(this,'/mfx/rvb_mix',0,1,'mfx_rm_disp',2)">
+        </div>
+      </div><!-- /master fx panel -->
 
     </div><!-- /page-fx -->
 
@@ -750,7 +1016,6 @@ function wsConnect() {
       scheduleReconnect();
     };
     ws.onerror = function() {
-      // onclose fires after onerror; just update label
       setConnStatus('error', 'error');
     };
     ws.onmessage = function(ev) {
@@ -781,8 +1046,8 @@ function setConnStatus(cls, label) {
 /* ══════════════════════════════════════════════════════════════════════════
    Rate-limited send (~30 Hz cap per address)
 ══════════════════════════════════════════════════════════════════════════ */
-var pendingSends = {};      // addr → {value, scheduled}
-var SEND_INTERVAL = 33;    // ms
+var pendingSends = {};
+var SEND_INTERVAL = 33;
 
 function send(addr, value) {
   if (!pendingSends[addr]) {
@@ -812,7 +1077,6 @@ function doSend(addr, value) {
    Control helpers
 ══════════════════════════════════════════════════════════════════════════ */
 
-/* Log-scale slider: input 0-100 → Hz */
 function logHz(t, minHz, maxHz) {
   return minHz * Math.pow(maxHz / minHz, t / 100);
 }
@@ -823,28 +1087,24 @@ function onLogSlider(el, addr, minHz, maxHz, dispId) {
   send(addr, rounded);
 }
 
-/* Linear slider: maps 0-100 range to [min, max] */
 function onLinSlider(el, addr, min, max, dispId, decimals) {
   var v = min + (parseFloat(el.value) / 100) * (max - min);
   document.getElementById(dispId).textContent = v.toFixed(decimals);
   send(addr, parseFloat(v.toFixed(decimals)));
 }
 
-/* Integer step slider (already has step=1 in HTML) */
 function onIntSlider(el, addr, dispId) {
   var v = Math.round(parseFloat(el.value));
   document.getElementById(dispId).textContent = v;
   send(addr, v);
 }
 
-/* TEMPO slider: direct BPM value */
 function onTempoSlider(el) {
   var v = Math.round(parseFloat(el.value));
   document.getElementById('tempo_disp').textContent = v + ' BPM';
   send('/tempo', v);
 }
 
-/* WAVE button group (0-3) */
 function onWaveBtn(groupId, idx, addr) {
   var btns = document.getElementById(groupId).querySelectorAll('.toggle-btn');
   btns.forEach(function(b, i) {
@@ -853,7 +1113,6 @@ function onWaveBtn(groupId, idx, addr) {
   send(addr, idx);
 }
 
-/* ROUTE toggle: btn1 = SEQ1 (val 0), btn2 = SEQ2 (val 1) */
 function onRoute(prefix, val) {
   var btn1 = document.getElementById(prefix + '_seq1');
   var btn2 = document.getElementById(prefix + '_seq2');
@@ -864,12 +1123,7 @@ function onRoute(prefix, val) {
     btn1.classList.remove('active');
     btn2.classList.add('active');
   }
-  // derive OSC address from prefix
-  // prefix patterns: vco1_route → /vco1/route
-  //                  sub1_route → /sub1/route
   var addr = '/' + prefix.replace('_route', '/route').replace('_', '/');
-  // handle sub addresses: sub1_route → /sub1/route (already correct)
-  // but vco1 → /vco1/route  and  the replace above gives /vco1/route ✓
   send(addr, val);
 }
 
@@ -914,15 +1168,12 @@ var TAB_PAGES = {
 };
 
 function showTab(name) {
-  // pages
   Object.keys(TAB_PAGES).forEach(function(k) {
     var pg = document.getElementById(TAB_PAGES[k]);
     if (pg) pg.classList.toggle('active', k === name);
   });
-  // buttons
   var btns = document.querySelectorAll('.tab-btn');
   btns.forEach(function(btn) {
-    // match by onclick attribute value
     var onclick = btn.getAttribute('onclick') || '';
     btn.classList.toggle('active', onclick.indexOf("'" + name + "'") !== -1);
   });
@@ -932,11 +1183,9 @@ function showTab(name) {
    Init display values on load
 ══════════════════════════════════════════════════════════════════════════ */
 window.addEventListener('DOMContentLoaded', function() {
-  // Set WS URL input placeholder
   var urlInput = document.getElementById('ws-url-input');
   urlInput.value = defaultWsUrl();
 
-  // Sync all display values from initial slider positions
   // VCO1
   document.getElementById('vco1_freq').dispatchEvent(new Event('input'));
   document.getElementById('vco1_atk').dispatchEvent(new Event('input'));
@@ -954,26 +1203,57 @@ window.addEventListener('DOMContentLoaded', function() {
   document.getElementById('sub2_div').dispatchEvent(new Event('input'));
   document.getElementById('sub3_div').dispatchEvent(new Event('input'));
   document.getElementById('sub4_div').dispatchEvent(new Event('input'));
-  // Seq / VCF / LFO
+  // Sequencer
   document.getElementById('tempo').dispatchEvent(new Event('input'));
   document.getElementById('seq1_rate').dispatchEvent(new Event('input'));
+  document.getElementById('seq1_length').dispatchEvent(new Event('input'));
+  document.getElementById('seq1_swing').dispatchEvent(new Event('input'));
+  document.getElementById('seq1_euclid').dispatchEvent(new Event('input'));
   document.getElementById('seq2_rate').dispatchEvent(new Event('input'));
-  document.getElementById('vcf_cutoff').dispatchEvent(new Event('input'));
-  document.getElementById('vcf_res').dispatchEvent(new Event('input'));
+  document.getElementById('seq2_length').dispatchEvent(new Event('input'));
+  document.getElementById('seq2_swing').dispatchEvent(new Event('input'));
+  document.getElementById('seq2_euclid').dispatchEvent(new Event('input'));
+  // Voices
+  document.getElementById('v1_cutoff').dispatchEvent(new Event('input'));
+  document.getElementById('v1_res').dispatchEvent(new Event('input'));
+  document.getElementById('v1_level').dispatchEvent(new Event('input'));
+  document.getElementById('v2_cutoff').dispatchEvent(new Event('input'));
+  document.getElementById('v2_res').dispatchEvent(new Event('input'));
+  document.getElementById('v2_level').dispatchEvent(new Event('input'));
+  // LFO
   document.getElementById('lfo_rate').dispatchEvent(new Event('input'));
   document.getElementById('lfo_amount').dispatchEvent(new Event('input'));
-  // FX
-  document.getElementById('fx_drive').dispatchEvent(new Event('input'));
-  document.getElementById('fx_cho_rate').dispatchEvent(new Event('input'));
-  document.getElementById('fx_cho_depth').dispatchEvent(new Event('input'));
-  document.getElementById('fx_cho_mix').dispatchEvent(new Event('input'));
-  document.getElementById('fx_dly_time').dispatchEvent(new Event('input'));
-  document.getElementById('fx_dly_fdbk').dispatchEvent(new Event('input'));
-  document.getElementById('fx_dly_mix').dispatchEvent(new Event('input'));
-  document.getElementById('fx_rvb_size').dispatchEvent(new Event('input'));
-  document.getElementById('fx_rvb_mix').dispatchEvent(new Event('input'));
+  // Voice 1 FX
+  document.getElementById('v1fx_drive').dispatchEvent(new Event('input'));
+  document.getElementById('v1fx_cho_rate').dispatchEvent(new Event('input'));
+  document.getElementById('v1fx_cho_depth').dispatchEvent(new Event('input'));
+  document.getElementById('v1fx_cho_mix').dispatchEvent(new Event('input'));
+  document.getElementById('v1fx_dly_time').dispatchEvent(new Event('input'));
+  document.getElementById('v1fx_dly_fdbk').dispatchEvent(new Event('input'));
+  document.getElementById('v1fx_dly_mix').dispatchEvent(new Event('input'));
+  document.getElementById('v1fx_rvb_size').dispatchEvent(new Event('input'));
+  document.getElementById('v1fx_rvb_mix').dispatchEvent(new Event('input'));
+  // Voice 2 FX
+  document.getElementById('v2fx_drive').dispatchEvent(new Event('input'));
+  document.getElementById('v2fx_cho_rate').dispatchEvent(new Event('input'));
+  document.getElementById('v2fx_cho_depth').dispatchEvent(new Event('input'));
+  document.getElementById('v2fx_cho_mix').dispatchEvent(new Event('input'));
+  document.getElementById('v2fx_dly_time').dispatchEvent(new Event('input'));
+  document.getElementById('v2fx_dly_fdbk').dispatchEvent(new Event('input'));
+  document.getElementById('v2fx_dly_mix').dispatchEvent(new Event('input'));
+  document.getElementById('v2fx_rvb_size').dispatchEvent(new Event('input'));
+  document.getElementById('v2fx_rvb_mix').dispatchEvent(new Event('input'));
+  // Master FX
+  document.getElementById('mfx_drive').dispatchEvent(new Event('input'));
+  document.getElementById('mfx_cho_rate').dispatchEvent(new Event('input'));
+  document.getElementById('mfx_cho_depth').dispatchEvent(new Event('input'));
+  document.getElementById('mfx_cho_mix').dispatchEvent(new Event('input'));
+  document.getElementById('mfx_dly_time').dispatchEvent(new Event('input'));
+  document.getElementById('mfx_dly_fdbk').dispatchEvent(new Event('input'));
+  document.getElementById('mfx_dly_mix').dispatchEvent(new Event('input'));
+  document.getElementById('mfx_rvb_size').dispatchEvent(new Event('input'));
+  document.getElementById('mfx_rvb_mix').dispatchEvent(new Event('input'));
 
-  // Connect WebSocket
   wsConnect();
 });
 </script>
